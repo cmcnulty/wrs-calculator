@@ -1,0 +1,43 @@
+{
+    "type": "object",
+    "title": "The Root Schema",
+    "required": [
+      "birthday",
+      "workingYears",
+      "retirementAge",
+      "currentBalance",
+      "assumedRate",
+      "annualContribution",
+      "averageHighestAnnualSalary"
+    ],
+    "properties": {
+      "birthday": {
+        "type": "string",
+        "format": "date"
+      },
+      "workingYears": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "retirementAge": {
+        "type": "integer",
+        "minimum": 55,
+        "maximum": 80
+      },
+      "currentBalance": {
+        "type": "number",
+        "minimum": 0
+      },
+      "assumedRate": {
+        "type": "number"
+      },
+      "annualContribution": {
+        "type": "number",
+        "minimum": 0
+      },
+      "averageHighestAnnualSalary": {
+        "type": "number",
+        "minimum": 0
+      }
+    }
+  }

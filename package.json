@@ -1,0 +1,19 @@
+{
+  "name": "wrs-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "ajv": "^6.10.2",
+    "compound-interest-calc": "^1.0.1",
+    "interestjs": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC"
+}
