@@ -1,0 +1,22 @@
+{
+    "general":{
+        "pre2000": 0.01765,
+        "post1999": 0.016,
+        "postAct10": 0.016
+    },
+    "protective_with_ss":{
+        "pre2000": 0.02165,
+        "post1999": 0.020,
+        "postAct10": 0.020
+    },
+    "protective_wo_ss":{
+        "pre2000": 0.02665,
+        "post1999": 0.025,
+        "postAct10": 0.025
+    },
+    "elected":{
+        "pre2000": 0.02165,
+        "post1999": 0.020,
+        "postAct10": 0.016
+    }
+}

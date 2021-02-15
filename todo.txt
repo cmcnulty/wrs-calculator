@@ -1,0 +1,18 @@
+assumptions to check/test:
+    It seems like combined service across categories is used for the age-reduction-factor,
+    so if you work only 10 years protective, and 15 years teacher, when looking up the 
+    age-reduction factor you use 25 years of service for both look ups. confirmed with 
+    WRS calculator, couldn't find clear documentation
+
+additional options to implement:
+accelerated payments
+guaranteed payments
+join/survivor payments
+variable-fund adjustment
+money-market comparison
+increase rate of additional contribution
+
+for additional contributions:
+start date, stop date (actual or projected)
+retirementDate
+

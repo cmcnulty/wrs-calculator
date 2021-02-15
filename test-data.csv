@@ -1,0 +1,9 @@
+name,birthDate,retireDate,survivorRetireDate,survivorSpouse,socialSecurityAt62,generalBefore2000,generalAfter1999,protectiveWithSocBefore2000,protectiveWithSocAfter1999,protectiveNoSocBefore2000,protectivNoSocAfter1999,electedBefore2000,electedAfter1999,electedAfterAct10,terminateBefore2000,yearOneHighestEarnings,yearOneService,yearTwoHighestEarnings,yearTwoService,yearThreeHighestEarnings,yearThreeService,variableDifferenceAmount,variableDifferenceType,moneyPurchaseBalance,employerAdditionalContribution,employeeAdditionalContribution
+Abraham Madison,01/01/1980,01/01/2045,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2044,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2043,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2042,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2041,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2040,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,0
+Abraham Madison,01/01/1980,01/01/2040,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,10000
+Abraham Madison,01/01/1980,01/01/2040,,,,0,20,0,0,0,0,0,0,0,,60000,1,60000,1,60000,1,0,0,0,0,15000

@@ -1,43 +1,89 @@
 {
-    "type": "object",
-    "title": "The Root Schema",
-    "required": [
-      "birthday",
-      "workingYears",
-      "retirementAge",
-      "currentBalance",
-      "assumedRate",
-      "annualContribution",
-      "averageHighestAnnualSalary"
-    ],
-    "properties": {
-      "birthday": {
-        "type": "string",
-        "format": "date"
-      },
-      "workingYears": {
-        "type": "integer",
-        "minimum": 0
-      },
-      "retirementAge": {
-        "type": "integer",
-        "minimum": 55,
-        "maximum": 80
-      },
-      "currentBalance": {
-        "type": "number",
-        "minimum": 0
-      },
-      "assumedRate": {
-        "type": "number"
-      },
-      "annualContribution": {
-        "type": "number",
-        "minimum": 0
-      },
-      "averageHighestAnnualSalary": {
-        "type": "number",
-        "minimum": 0
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "birthday",
+    "terminationAge",
+    "withdrawalAge",
+    "salary",
+    "contribution"
+  ],
+  "properties": {
+    "birthday": {
+      "type": "string",
+      "format": "date"
+    },
+    "terminationAge": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "withdrawalAge": {
+      "type": "integer",
+      "minimum": 55,
+      "maximum": 80
+    },
+    "salary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "averageHighestAnnualSalary",
+          "workingYears",
+          "serviceCategory",
+          "eraCategory"
+        ],
+        "properties": {
+          "averageHighestAnnualSalary": {
+            "type": "number",
+            "minimum": 0
+          },
+          "years": {
+            "type": "number",
+            "minimum": 0
+          },
+          "serviceCategory": {
+            "type": "string",
+            "enum": [
+              "general",
+              "protective_with_ss",
+              "protective_wo_ss",
+              "elected"
+            ]
+          },
+          "eraCategory": {
+            "type": "string",
+            "enum": [
+              "pre2000",
+              "post1999",
+              "postAct10"
+            ]
+          }
+        }
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "title": "Voluntary Additional Contributions",
+      "required": [
+        "currentBalance",
+        "assumedRate",
+        "startingContribution",
+        "contributionIncreaseRate"
+      ],
+      "properties": {
+        "currentBalance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "assumedRate": {
+          "type": "number"
+        },
+        "startingContribution": {
+          "type": "number",
+          "minimum": 0
+        }
       }
     }
   }
+}

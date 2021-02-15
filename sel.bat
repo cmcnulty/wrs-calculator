@@ -1,0 +1,1 @@
+selenium-side-runner -c "goog:chromeOptions.args=[--headless,--nogpu] browserName=chrome" --output-directory=results generatedTest.side.json

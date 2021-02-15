@@ -5,8 +5,14 @@
   "main": "index.js",
   "dependencies": {
     "ajv": "^6.10.2",
+    "chromedriver": "^88.0.0",
     "compound-interest-calc": "^1.0.1",
-    "interestjs": "^1.0.0"
+    "csv-parse": "^4.15.1",
+    "csv-parser": "^3.0.0",
+    "csvtojson": "^2.0.10",
+    "interestjs": "^1.0.0",
+    "jest": "^26.6.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "chai": "^4.2.0"
