@@ -1,7 +1,4 @@
 const compound = require('compound-interest-calc')
-const ageReductionFactorsGeneral = require('./age-reduction-factors-general.json');
-const ageReductionFactorsProtective = require('./age-reduction-factors-protective.json');
-const ageReductionFactorsElected = require('./age-reduction-factors-elected.json');
 const moneyPurchaseCalculationFactors = require('./money-purchase-calculation-factors.json');
 const optionsSchema = require('./options-schema.json');
 const formulaMultipler = require('./formula-multiplier.json' );
@@ -61,7 +58,6 @@ function RetirementBalance( options ) {
         
         const normalRetirementAge = getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
         const ageReductionFactor = calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
-        const ageReductionFactorFromTable = getAgeReductionFactor(salary.serviceCategory, totalYears, this.retirementAge);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
         // console.log(`age reduction factor: ${ageReductionFactor}, from Table: ${ageReductionFactorFromTable} formula multiplier: ${multipler}`);
         const monthlyHighestSalary = salary.averageHighestAnnualSalary / 12;
@@ -78,16 +74,6 @@ function RetirementBalance( options ) {
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
 
-    function getAgeReductionFactor(serviceCategory, yearsWorked, retirementAge) {
-        const factorTable = getAgeReductionFactorTable(serviceCategory);
-        // console.log(factorTable);
-        const keys = Object.keys(factorTable).map(i => parseInt(i));
-        const workedRow = keys.reverse().find( el => el <= yearsWorked ).toString();
-        //const ageColumn = Object.keys(factorTable[workedRow]).map(i => parseInt(i));
-        //console.log(`retirement age: ${ageColumn}`);
-        //const ageFactor = ageColumn.find(el => retirementAge >= el ).toString();
-        return factorTable[workedRow][retirementAge];
-    }
 
     function getNormalRetirementAge(serviceCategory, startDate, combinedServiceYears) {
             /*
@@ -172,20 +158,6 @@ function RetirementBalance( options ) {
 
         return parseFloat(roundNum((1 - totalReduction),3));
 
-    }
-
-    function getAgeReductionFactorTable(serviceCategory){
-        switch(serviceCategory) {
-            case 'general':
-                return ageReductionFactorsGeneral;
-            case 'elected':
-                return ageReductionFactorsElected;
-            case 'protective_with_ss':
-            case 'protective_wo_ss':
-                return ageReductionFactorsProtective;
-            default:
-                throw `invalid service category: ${serviceCategory}`;
-        }
     }
 
     function roundNum(num, length) { 
