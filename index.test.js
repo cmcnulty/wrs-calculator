@@ -41,15 +41,21 @@ describe ('#calculate()', function() {
         } 
     };
 
-    it('should pass the generated tests!', function(){
-        for(const i in tests) {
-            let ex = transformTest(tests[i].data);
-            let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-            let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
+
+
+    for(const i in tests) {
+        let ex = transformTest(tests[i].data);
+        let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
+
+        it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
+            // console.log(i);
             expect(calc(ex).monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
             expect(calc(ex).optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
-        }
-    });
+           // console.log(expectedMonthly);
+        });
+    }
+
 
     
     // PASSES

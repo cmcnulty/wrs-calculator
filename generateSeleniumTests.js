@@ -116,7 +116,7 @@ function makeTest(row) {
         thisTest.tests[0].commands[resultsIndex].value = outputValues;
 
         // then write out that test so that it can be executed
-        const sideTest = `generatedTest.${uuid()}.side`;
+        const sideTest = `generatedTest.${row}.${uuid()}.side`;
         await fsPromises.writeFile(sideTest, JSON.stringify(thisTest), {encoding:'utf8',flag:'w'});
 
         // then run the tests, and grab the correct values from the failed test
@@ -139,7 +139,12 @@ function makeTest(row) {
         // hard-code in the first test, first assertion, first failure
         const failureMessage = testResults.testResults[0].assertionResults[0].failureMessages[0];
         const findVals = new RegExp(/Expected value to be \(using Object\.is\):\s*"(.*)"\s*Received/,'gm');
-        const correctValues = findVals.exec(failureMessage)[1].split(divider);
+        const regExResults = findVals.exec(failureMessage);
+        if( regExResults === null ) {
+            console.log(failureMessage);
+            throw Error('couldnt find expected failure');
+        }
+        const correctValues = regExResults[1].split(divider);
 
         // re-map them back to the original values by index
         const actualValues = outputColumns.reduce((obj, key, index) => ({ ...obj, [key]: correctValues[index] }), {});

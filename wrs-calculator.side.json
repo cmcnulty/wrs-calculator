@@ -122,6 +122,18 @@
     ],
     "value": "${electedAfter1999}"
   }, {
+    "id": "a2f3e525-8980-4337-848a-991264cb6900",
+    "comment": "electedAfterAct10",
+    "command": "type",
+    "target": "name=txtElectedExecutiveServiceYearsAfterAct10",
+    "targets": [
+      ["name=txtElectedExecutiveServiceYearsAfterAct10", "name"],
+      ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(4) > input", "css:finder"],
+      ["xpath=//input[@name='txtElectedExecutiveServiceYearsAfterAct10']", "xpath:attributes"],
+      ["xpath=//tr[5]/td[4]/input", "xpath:position"]
+    ],
+    "value": "${electedAfterAct10}"
+  }, {
     "id": "1cc33ad6-4661-4bb6-8c2a-54d1da8895e7",
     "comment": "terminateBefore2000",
     "command": "click",

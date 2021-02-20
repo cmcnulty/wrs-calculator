@@ -171,11 +171,11 @@ function RetirementBalance( options ) {
         const result = compound(currentBalance, annualContribution, compoundedYears, interestRate);
 
         // fix bug with compound-interest-calc - doesn't handle zero years too well :(
-        // console.log(result)
         if(!(compoundedYears > 0)){
             result.result = currentBalance;
         }
 
+        // doesn't handle zero percent interest rate - in that case, just multiply
         if ( interestRate === 0) {
             result.result = currentBalance + (annualContribution * compoundedYears);
         }
