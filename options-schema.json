@@ -19,7 +19,7 @@
     },
     "withdrawalAge": {
       "type": "integer",
-      "minimum": 55,
+      "minimum": 50,
       "maximum": 80
     },
     "salary": {

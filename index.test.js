@@ -45,15 +45,31 @@ describe ('#calculate()', function() {
 
     for(const i in tests) {
         let ex = transformTest(tests[i].data);
-        let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-        let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
 
-        it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
-            // console.log(i);
-            expect(calc(ex).monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
-            expect(calc(ex).optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
-           // console.log(expectedMonthly);
-        });
+        if( tests[i].results.AnnuitantsLifeOnlyReg === 'ERROR' ) {
+
+            it(`should pass generated test: ${i}, ERROR`, function() {
+                if(ex.withdrawalAge < 55 ) {
+                    expect(() => calc(ex)).to.throw('.withdrawalAge - should be >= 55');
+                } else {
+                    expect(() => calc(ex)).to.throw('asdf');
+                }
+                
+            });
+
+        } else {
+            let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+            let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
+    
+            it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
+                // console.log(i);
+                expect(calc(ex).monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
+                expect(calc(ex).optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
+               // console.log(expectedMonthly);
+            });
+        }
+
+
     }
 
 

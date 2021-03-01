@@ -6,7 +6,7 @@
   "tests": [{
     "id": "6c9d389f-db68-490b-adb6-5551c0a4962c",
     "name": "template",
-    "commands": [ {
+    "commands": [{
       "id": "916c6a88-da83-4c32-9756-a5bea19732bf",
       "comment": "",
       "command": "open",
@@ -15,256 +15,256 @@
       "value": ""
     }, {
       "id": "57225d80-73f6-4b94-af6a-c384c27f2918",
-    "comment": "birthDate",
-    "command": "type",
-    "target": "name=txtBirthDate",
-    "targets": [
-      ["name=txtBirthDate", "name"],
-      ["css=p:nth-child(1) > input:nth-child(6)", "css:finder"],
-      ["xpath=//input[@name='txtBirthDate']", "xpath:attributes"],
-      ["xpath=//input[2]", "xpath:position"]
-    ],
-    "value": "${birthDate}"
-  }, {
-    "id": "c95eb856-fda9-4c41-b062-faae0b09c96b",
-    "comment": "retireDate",
-    "command": "type",
-    "target": "name=txtRetireDate",
-    "targets": [
-      ["name=txtRetireDate", "name"],
-      ["css=input:nth-child(9)", "css:finder"],
-      ["xpath=//input[@name='txtRetireDate']", "xpath:attributes"],
-      ["xpath=//input[3]", "xpath:position"]
-    ],
-    "value": "${retireDate}"
-  }, {
-    "id": "7049953c-c1b4-449c-be0d-e34ba4fb0d59",
-    "comment": "generalBefore2000",
-    "command": "type",
-    "target": "name=txtGeneralServiceYearsBefore",
-    "targets": [
-      ["name=txtGeneralServiceYearsBefore", "name"],
-      ["css=tr:nth-child(2) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtGeneralServiceYearsBefore']", "xpath:attributes"],
-      ["xpath=//td[2]/input", "xpath:position"]
-    ],
-    "value": "${generalBefore2000}"
-  }, {
-    "id": "fad06422-2911-4103-991f-db78ce8c9d58",
-    "comment": "protectiveWithSocBefore2000",
-    "command": "type",
-    "target": "name=txtProtWithSocialSecurityServiceYearsBefore",
-    "targets": [
-      ["name=txtProtWithSocialSecurityServiceYearsBefore", "name"],
-      ["css=tr:nth-child(3) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtProtWithSocialSecurityServiceYearsBefore']", "xpath:attributes"],
-      ["xpath=//tr[3]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${protectiveWithSocBefore2000}"
-  }, {
-    "id": "20ac8333-f0cb-4fd1-a5d3-79d3408640e8",
-    "comment": "protectiveWithSocAfter1999",
-    "command": "type",
-    "target": "name=txtProtWithSocialSecurityServiceYearsAfter",
-    "targets": [
-      ["name=txtProtWithSocialSecurityServiceYearsAfter", "name"],
-      ["css=tr:nth-child(3) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtProtWithSocialSecurityServiceYearsAfter']", "xpath:attributes"],
-      ["xpath=//tr[3]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${protectiveWithSocAfter1999}"
-  }, {
-    "id": "61f29452-dea0-487f-aa84-2c6301894987",
-    "comment": "protectiveNoSocBefore2000",
-    "command": "type",
-    "target": "name=txtProtWithoutSocialSecurityServiceYearsBefore",
-    "targets": [
-      ["name=txtProtWithoutSocialSecurityServiceYearsBefore", "name"],
-      ["css=tr:nth-child(4) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtProtWithoutSocialSecurityServiceYearsBefore']", "xpath:attributes"],
-      ["xpath=//tr[4]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${protectiveNoSocBefore2000}"
-  }, {
-    "id": "da3c65f2-18e8-4e3d-be5e-4de4eff60e4d",
-    "comment": "protectivNoSocAfter1999",
-    "command": "type",
-    "target": "name=txtProtWithoutSocialSecurityServiceYearsAfter",
-    "targets": [
-      ["name=txtProtWithoutSocialSecurityServiceYearsAfter", "name"],
-      ["css=tr:nth-child(4) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtProtWithoutSocialSecurityServiceYearsAfter']", "xpath:attributes"],
-      ["xpath=//tr[4]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${protectivNoSocAfter1999}"
-  }, {
-    "id": "9b1a152c-0e7c-47ef-a948-ec7301e8b832",
-    "comment": "electedBefore2000",
-    "command": "type",
-    "target": "name=txtElectedExecutiveServiceYearsBefore",
-    "targets": [
-      ["name=txtElectedExecutiveServiceYearsBefore", "name"],
-      ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtElectedExecutiveServiceYearsBefore']", "xpath:attributes"],
-      ["xpath=//tr[5]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${electedBefore2000}"
-  }, {
-    "id": "42f3e525-8980-4337-848a-991264cb6900",
-    "comment": "electedAfter1999",
-    "command": "type",
-    "target": "name=txtElectedExecutiveServiceYearsAfter",
-    "targets": [
-      ["name=txtElectedExecutiveServiceYearsAfter", "name"],
-      ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtElectedExecutiveServiceYearsAfter']", "xpath:attributes"],
-      ["xpath=//tr[5]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${electedAfter1999}"
-  }, {
-    "id": "a2f3e525-8980-4337-848a-991264cb6900",
-    "comment": "electedAfterAct10",
-    "command": "type",
-    "target": "name=txtElectedExecutiveServiceYearsAfterAct10",
-    "targets": [
-      ["name=txtElectedExecutiveServiceYearsAfterAct10", "name"],
-      ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(4) > input", "css:finder"],
-      ["xpath=//input[@name='txtElectedExecutiveServiceYearsAfterAct10']", "xpath:attributes"],
-      ["xpath=//tr[5]/td[4]/input", "xpath:position"]
-    ],
-    "value": "${electedAfterAct10}"
-  }, {
-    "id": "1cc33ad6-4661-4bb6-8c2a-54d1da8895e7",
-    "comment": "terminateBefore2000",
-    "command": "click",
-    "target": "xpath=(//input[@name='optTerminate'])[2]",
-    "targets": [
-      ["css=input:nth-child(17)", "css:finder"],
-      ["xpath=(//input[@name='optTerminate'])[2]", "xpath:attributes"],
-      ["xpath=//p[2]/input[2]", "xpath:position"]
-    ],
-    "value": ""
-  }, {
-    "id": "eede11af-19f8-44f9-bb10-665d1201059c",
-    "comment": "yearOneService",
-    "command": "type",
-    "target": "name=txtYear1Factor",
-    "targets": [
-      ["name=txtYear1Factor", "name"],
-      ["css=table:nth-child(20) tr:nth-child(5) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear1Factor']", "xpath:attributes"],
-      ["xpath=//table[4]/tbody/tr[5]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${yearOneService}"
-  }, {
-    "id": "f5a0d437-0a29-4669-96c5-b5a25600bcbb",
-    "comment": "yearTwoService",
-    "command": "type",
-    "target": "name=txtYear2Factor",
-    "targets": [
-      ["name=txtYear2Factor", "name"],
-      ["css=tr:nth-child(6) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear2Factor']", "xpath:attributes"],
-      ["xpath=//tr[6]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${yearTwoService}"
-  }, {
-    "id": "533e86a9-dd45-4780-9f82-54dd1cc5e612",
-    "comment": "yearThreeService",
-    "command": "type",
-    "target": "name=txtYear3Factor",
-    "targets": [
-      ["name=txtYear3Factor", "name"],
-      ["css=tr:nth-child(7) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear3Factor']", "xpath:attributes"],
-      ["xpath=//tr[7]/td[3]/input", "xpath:position"]
-    ],
-    "value": "${yearThreeService}"
-  }, {
-    "id": "de27990f-7e98-4569-9fad-6ba3bd84ae76",
-    "comment": "moneyPurchaseBalance",
-    "command": "type",
-    "target": "name=txtMoneyPurchase",
-    "targets": [
-      ["name=txtMoneyPurchase", "name"],
-      ["css=p:nth-child(4) > input", "css:finder"],
-      ["xpath=//input[@name='txtMoneyPurchase']", "xpath:attributes"],
-      ["xpath=//p[3]/input", "xpath:position"]
-    ],
-    "value": "${moneyPurchaseBalance}"
-  }, {
-    "id": "db528e7a-ac22-46e4-a160-cfacc461856f",
-    "comment": "employeeAdditionalContribution",
-    "command": "type",
-    "target": "name=txtEmpeAddl",
-    "targets": [
-      ["name=txtEmpeAddl", "name"],
-      ["css=p > input:nth-child(8)", "css:finder"],
-      ["xpath=//input[@name='txtEmpeAddl']", "xpath:attributes"],
-      ["xpath=//p[4]/input", "xpath:position"]
-    ],
-    "value": "${employeeAdditionalContribution}"
-  }, {
-    "id": "11aefb9b-0f54-461e-a32a-8e2333896d4c",
-    "comment": "employerAdditionalContribution",
-    "command": "type",
-    "target": "name=txtEmprAddl",
-    "targets": [
-      ["name=txtEmprAddl", "name"],
-      ["css=input:nth-child(14)", "css:finder"],
-      ["xpath=//input[@name='txtEmprAddl']", "xpath:attributes"],
-      ["xpath=//p[4]/input[2]", "xpath:position"]
-    ],
-    "value": "${employerAdditionalContribution}"
-  }, {
-    "id": "d3140edf-839c-487a-86ed-1ce756353c5b",
-    "comment": "generalAfter1999",
-    "command": "type",
-    "target": "name=txtGeneralServiceYearsAfter",
-    "targets": [
-      ["name=txtGeneralServiceYearsAfter", "name"],
-      ["css=tr:nth-child(2) > td:nth-child(3) > input", "css:finder"],
-      ["xpath=//input[@name='txtGeneralServiceYearsAfter']", "xpath:attributes"],
-      ["xpath=//td[3]/input", "xpath:position"]
-    ],
-    "value": "${generalAfter1999}"
-  }, {
-    "id": "80c58094-2734-429c-a5a3-0878f75a1071",
-    "comment": "yearOneHighestEarnings",
-    "command": "type",
-    "target": "name=txtYear1Salary",
-    "targets": [
-      ["name=txtYear1Salary", "name"],
-      ["css=table:nth-child(20) tr:nth-child(5) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear1Salary']", "xpath:attributes"],
-      ["xpath=//table[4]/tbody/tr[5]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${yearOneHighestEarnings}"
-  }, {
-    "id": "8265cc48-dd21-4336-bfdb-03e687d6ecf6",
-    "comment": "yearTwoHighestEarnings",
-    "command": "type",
-    "target": "name=txtYear2Salary",
-    "targets": [
-      ["name=txtYear2Salary", "name"],
-      ["css=tr:nth-child(6) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear2Salary']", "xpath:attributes"],
-      ["xpath=//tr[6]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${yearTwoHighestEarnings}"
-  }, {
-    "id": "07cca195-cd6b-4662-aac5-07e213d10487",
-    "comment": "yearThreeHighestEarnings",
-    "command": "type",
-    "target": "name=txtYear3Salary",
-    "targets": [
-      ["name=txtYear3Salary", "name"],
-      ["css=tr:nth-child(7) > td:nth-child(2) > input", "css:finder"],
-      ["xpath=//input[@name='txtYear3Salary']", "xpath:attributes"],
-      ["xpath=//tr[7]/td[2]/input", "xpath:position"]
-    ],
-    "value": "${yearThreeHighestEarnings}"
-  }, {
+      "comment": "birthDate",
+      "command": "type",
+      "target": "name=txtBirthDate",
+      "targets": [
+        ["name=txtBirthDate", "name"],
+        ["css=p:nth-child(1) > input:nth-child(6)", "css:finder"],
+        ["xpath=//input[@name='txtBirthDate']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": "${birthDate}"
+    }, {
+      "id": "c95eb856-fda9-4c41-b062-faae0b09c96b",
+      "comment": "retireDate",
+      "command": "type",
+      "target": "name=txtRetireDate",
+      "targets": [
+        ["name=txtRetireDate", "name"],
+        ["css=input:nth-child(9)", "css:finder"],
+        ["xpath=//input[@name='txtRetireDate']", "xpath:attributes"],
+        ["xpath=//input[3]", "xpath:position"]
+      ],
+      "value": "${retireDate}"
+    }, {
+      "id": "7049953c-c1b4-449c-be0d-e34ba4fb0d59",
+      "comment": "generalBefore2000",
+      "command": "type",
+      "target": "name=txtGeneralServiceYearsBefore",
+      "targets": [
+        ["name=txtGeneralServiceYearsBefore", "name"],
+        ["css=tr:nth-child(2) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtGeneralServiceYearsBefore']", "xpath:attributes"],
+        ["xpath=//td[2]/input", "xpath:position"]
+      ],
+      "value": "${generalBefore2000}"
+    }, {
+      "id": "fad06422-2911-4103-991f-db78ce8c9d58",
+      "comment": "protectiveWithSocBefore2000",
+      "command": "type",
+      "target": "name=txtProtWithSocialSecurityServiceYearsBefore",
+      "targets": [
+        ["name=txtProtWithSocialSecurityServiceYearsBefore", "name"],
+        ["css=tr:nth-child(3) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtProtWithSocialSecurityServiceYearsBefore']", "xpath:attributes"],
+        ["xpath=//tr[3]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${protectiveWithSocBefore2000}"
+    }, {
+      "id": "20ac8333-f0cb-4fd1-a5d3-79d3408640e8",
+      "comment": "protectiveWithSocAfter1999",
+      "command": "type",
+      "target": "name=txtProtWithSocialSecurityServiceYearsAfter",
+      "targets": [
+        ["name=txtProtWithSocialSecurityServiceYearsAfter", "name"],
+        ["css=tr:nth-child(3) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtProtWithSocialSecurityServiceYearsAfter']", "xpath:attributes"],
+        ["xpath=//tr[3]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${protectiveWithSocAfter1999}"
+    }, {
+      "id": "61f29452-dea0-487f-aa84-2c6301894987",
+      "comment": "protectiveNoSocBefore2000",
+      "command": "type",
+      "target": "name=txtProtWithoutSocialSecurityServiceYearsBefore",
+      "targets": [
+        ["name=txtProtWithoutSocialSecurityServiceYearsBefore", "name"],
+        ["css=tr:nth-child(4) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtProtWithoutSocialSecurityServiceYearsBefore']", "xpath:attributes"],
+        ["xpath=//tr[4]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${protectiveNoSocBefore2000}"
+    }, {
+      "id": "da3c65f2-18e8-4e3d-be5e-4de4eff60e4d",
+      "comment": "protectivNoSocAfter1999",
+      "command": "type",
+      "target": "name=txtProtWithoutSocialSecurityServiceYearsAfter",
+      "targets": [
+        ["name=txtProtWithoutSocialSecurityServiceYearsAfter", "name"],
+        ["css=tr:nth-child(4) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtProtWithoutSocialSecurityServiceYearsAfter']", "xpath:attributes"],
+        ["xpath=//tr[4]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${protectivNoSocAfter1999}"
+    }, {
+      "id": "9b1a152c-0e7c-47ef-a948-ec7301e8b832",
+      "comment": "electedBefore2000",
+      "command": "type",
+      "target": "name=txtElectedExecutiveServiceYearsBefore",
+      "targets": [
+        ["name=txtElectedExecutiveServiceYearsBefore", "name"],
+        ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtElectedExecutiveServiceYearsBefore']", "xpath:attributes"],
+        ["xpath=//tr[5]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${electedBefore2000}"
+    }, {
+      "id": "42f3e525-8980-4337-848a-991264cb6900",
+      "comment": "electedAfter1999",
+      "command": "type",
+      "target": "name=txtElectedExecutiveServiceYearsAfter",
+      "targets": [
+        ["name=txtElectedExecutiveServiceYearsAfter", "name"],
+        ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtElectedExecutiveServiceYearsAfter']", "xpath:attributes"],
+        ["xpath=//tr[5]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${electedAfter1999}"
+    }, {
+      "id": "a2f3e525-8980-4337-848a-991264cb6900",
+      "comment": "electedAfterAct10",
+      "command": "type",
+      "target": "name=txtElectedExecutiveServiceYearsAfterAct10",
+      "targets": [
+        ["name=txtElectedExecutiveServiceYearsAfterAct10", "name"],
+        ["css=table:nth-child(14) tr:nth-child(5) > td:nth-child(4) > input", "css:finder"],
+        ["xpath=//input[@name='txtElectedExecutiveServiceYearsAfterAct10']", "xpath:attributes"],
+        ["xpath=//tr[5]/td[4]/input", "xpath:position"]
+      ],
+      "value": "${electedAfterAct10}"
+    }, {
+      "id": "1cc33ad6-4661-4bb6-8c2a-54d1da8895e7",
+      "comment": "terminateBefore2000",
+      "command": "click",
+      "target": "xpath=(//input[@name='optTerminate'])[2]",
+      "targets": [
+        ["css=input:nth-child(17)", "css:finder"],
+        ["xpath=(//input[@name='optTerminate'])[2]", "xpath:attributes"],
+        ["xpath=//p[2]/input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "eede11af-19f8-44f9-bb10-665d1201059c",
+      "comment": "yearOneService",
+      "command": "type",
+      "target": "name=txtYear1Factor",
+      "targets": [
+        ["name=txtYear1Factor", "name"],
+        ["css=table:nth-child(20) tr:nth-child(5) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear1Factor']", "xpath:attributes"],
+        ["xpath=//table[4]/tbody/tr[5]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${yearOneService}"
+    }, {
+      "id": "f5a0d437-0a29-4669-96c5-b5a25600bcbb",
+      "comment": "yearTwoService",
+      "command": "type",
+      "target": "name=txtYear2Factor",
+      "targets": [
+        ["name=txtYear2Factor", "name"],
+        ["css=tr:nth-child(6) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear2Factor']", "xpath:attributes"],
+        ["xpath=//tr[6]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${yearTwoService}"
+    }, {
+      "id": "533e86a9-dd45-4780-9f82-54dd1cc5e612",
+      "comment": "yearThreeService",
+      "command": "type",
+      "target": "name=txtYear3Factor",
+      "targets": [
+        ["name=txtYear3Factor", "name"],
+        ["css=tr:nth-child(7) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear3Factor']", "xpath:attributes"],
+        ["xpath=//tr[7]/td[3]/input", "xpath:position"]
+      ],
+      "value": "${yearThreeService}"
+    }, {
+      "id": "de27990f-7e98-4569-9fad-6ba3bd84ae76",
+      "comment": "moneyPurchaseBalance",
+      "command": "type",
+      "target": "name=txtMoneyPurchase",
+      "targets": [
+        ["name=txtMoneyPurchase", "name"],
+        ["css=p:nth-child(4) > input", "css:finder"],
+        ["xpath=//input[@name='txtMoneyPurchase']", "xpath:attributes"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": "${moneyPurchaseBalance}"
+    }, {
+      "id": "db528e7a-ac22-46e4-a160-cfacc461856f",
+      "comment": "employeeAdditionalContribution",
+      "command": "type",
+      "target": "name=txtEmpeAddl",
+      "targets": [
+        ["name=txtEmpeAddl", "name"],
+        ["css=p > input:nth-child(8)", "css:finder"],
+        ["xpath=//input[@name='txtEmpeAddl']", "xpath:attributes"],
+        ["xpath=//p[4]/input", "xpath:position"]
+      ],
+      "value": "${employeeAdditionalContribution}"
+    }, {
+      "id": "11aefb9b-0f54-461e-a32a-8e2333896d4c",
+      "comment": "employerAdditionalContribution",
+      "command": "type",
+      "target": "name=txtEmprAddl",
+      "targets": [
+        ["name=txtEmprAddl", "name"],
+        ["css=input:nth-child(14)", "css:finder"],
+        ["xpath=//input[@name='txtEmprAddl']", "xpath:attributes"],
+        ["xpath=//p[4]/input[2]", "xpath:position"]
+      ],
+      "value": "${employerAdditionalContribution}"
+    }, {
+      "id": "d3140edf-839c-487a-86ed-1ce756353c5b",
+      "comment": "generalAfter1999",
+      "command": "type",
+      "target": "name=txtGeneralServiceYearsAfter",
+      "targets": [
+        ["name=txtGeneralServiceYearsAfter", "name"],
+        ["css=tr:nth-child(2) > td:nth-child(3) > input", "css:finder"],
+        ["xpath=//input[@name='txtGeneralServiceYearsAfter']", "xpath:attributes"],
+        ["xpath=//td[3]/input", "xpath:position"]
+      ],
+      "value": "${generalAfter1999}"
+    }, {
+      "id": "80c58094-2734-429c-a5a3-0878f75a1071",
+      "comment": "yearOneHighestEarnings",
+      "command": "type",
+      "target": "name=txtYear1Salary",
+      "targets": [
+        ["name=txtYear1Salary", "name"],
+        ["css=table:nth-child(20) tr:nth-child(5) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear1Salary']", "xpath:attributes"],
+        ["xpath=//table[4]/tbody/tr[5]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${yearOneHighestEarnings}"
+    }, {
+      "id": "8265cc48-dd21-4336-bfdb-03e687d6ecf6",
+      "comment": "yearTwoHighestEarnings",
+      "command": "type",
+      "target": "name=txtYear2Salary",
+      "targets": [
+        ["name=txtYear2Salary", "name"],
+        ["css=tr:nth-child(6) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear2Salary']", "xpath:attributes"],
+        ["xpath=//tr[6]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${yearTwoHighestEarnings}"
+    }, {
+      "id": "07cca195-cd6b-4662-aac5-07e213d10487",
+      "comment": "yearThreeHighestEarnings",
+      "command": "type",
+      "target": "name=txtYear3Salary",
+      "targets": [
+        ["name=txtYear3Salary", "name"],
+        ["css=tr:nth-child(7) > td:nth-child(2) > input", "css:finder"],
+        ["xpath=//input[@name='txtYear3Salary']", "xpath:attributes"],
+        ["xpath=//tr[7]/td[2]/input", "xpath:position"]
+      ],
+      "value": "${yearThreeHighestEarnings}"
+    }, {
       "id": "3946053b-39ab-450b-8960-a5af13ce72f0",
       "comment": "",
       "command": "click",
@@ -276,7 +276,38 @@
         ["xpath=//div[2]/input", "xpath:position"]
       ],
       "value": ""
-    },{
+    }, {
+      "id": "54523dbe-3492-4cda-9793-d329af8d1b0a",
+      "comment": "hasError",
+      "command": "storeXpathCount",
+      "target": "xpath=//html/body/form/div[2]/p/table[2]/tbody/tr[2]/td/center/*[text()[contains(.,'ERROR')]]",
+      "targets": [],
+      "value": "hasError"
+    }, {
+      "id": "285a3dd1-7fcc-49c5-8960-66e0e7dc9233",
+      "comment": "",
+      "command": "if",
+      "target": "${hasError} > 0",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b49c5c9d-1f88-4127-acde-8c18f45cbf39",
+      "comment": "errorMessage",
+      "command": "assertText",
+      "target": "css=td > p",
+      "targets": [
+        ["css=td > p", "css:finder"],
+        ["xpath=//td[2]/p", "xpath:position"]
+      ],
+      "value": "ERROR"
+    }, {
+      "id": "86bc849e-0b1b-423a-b30b-11e52abfe66b",
+      "comment": "",
+      "command": "else",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
       "id": "0ec2076d-46cc-4a22-9030-02abf5bce879",
       "comment": "AnnuitantsLifeOnlyReg",
       "command": "storeText",
@@ -600,10 +631,7 @@
         ["xpath=//td[6]/b", "xpath:position"]
       ],
       "value": "AddContributionsLumpSum"
-    }
-
-
-    , {
+    }, {
       "id": "b4ecc190-b70c-47b0-a177-534b14c7c825",
       "comment": "combinedActualResults",
       "command": "assertText",
@@ -612,7 +640,14 @@
         ["css=em", "css:finder"],
         ["xpath=//em", "xpath:position"]
       ],
-      "value": "${ActualSixtyPaymentsGuaranteed}|||${ActualOneEightyPaymentsGuaranteed}"
+      "value": "${AnnuitantsLifeOnlyReg}|||${AnnuitantsLifeOnlyAccUntil62}|||${AnnuitantsLifeOnlyAccAfter62}|||${AnnuitantsLifeOnlyAddCont}|||${SixtyPaymentsReg}|||${SixtyPaymentsAccUntil62}|||${SixtyPaymentsAccAfter62}|||${SixtyPaymentsAddCont}|||${OneEightyPaymentsGuaranteedReg}|||${OneEightyPaymentsGuaranteedAccUntil62}|||${OneEightyPaymentsGuaranteedAccAfter62}|||${OneEightyPaymentsGuaranteedAddCont}|||${Survivor75Reg}|||${Survivor75AccUntil62}|||${Survivor75AccAfter62}|||${Survivor75AddCont}|||${Survivor100Reg}|||${Survivor100AccUntil62}|||${Survivor100AccAfter62}|||${Survivor100AddCont}|||${Reduce25DeathReg}|||${Reduce25DeathAccUntil62}|||${Reduce25DeathAccAfter62}|||${Reduce25DeathAddCont}|||${Survivor100WithGuaranteeReg}|||${Survivor100WithGuaranteeAccUntil62}|||${Survivor100WithGuaranteeAccAfter62}|||${Survivor100WithGuaranteeAddCont}|||${AddContributions24Months}|||${AddContributions60Months}|||${AddContributions120Months}|||${AddContributionsLumpSum}"
+    }, {
+      "id": "df037f18-b4be-4a95-a905-b6cf27e2045b",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
     }]
   }],
   "suites": [{

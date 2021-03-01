@@ -137,17 +137,25 @@ function makeTest(row) {
 
         const testResults = JSON.parse(Buffer.from(testResultsStr).toString());
         // hard-code in the first test, first assertion, first failure
+        if( testResults.testResults[0].assertionResults[0] === undefined) {
+            console.log(testResults);
+            throw Error('Couldnt find expected assertionResults');
+        }
         const failureMessage = testResults.testResults[0].assertionResults[0].failureMessages[0];
         const findVals = new RegExp(/Expected value to be \(using Object\.is\):\s*"(.*)"\s*Received/,'gm');
         const regExResults = findVals.exec(failureMessage);
         if( regExResults === null ) {
             console.log(failureMessage);
-            throw Error('couldnt find expected failure');
+            throw Error('Ccouldnt find expected failure');
         }
         const correctValues = regExResults[1].split(divider);
-
-        // re-map them back to the original values by index
-        const actualValues = outputColumns.reduce((obj, key, index) => ({ ...obj, [key]: correctValues[index] }), {});
+        let actualValues = {};
+        if( correctValues[0]==='ERROR') {
+            actualValues = outputColumns.reduce((obj, key, index) => ({ ...obj, [key]: 'ERROR' }), {});
+        } else {
+            // re-map them back to the original values by index
+            actualValues = outputColumns.reduce((obj, key, index) => ({ ...obj, [key]: correctValues[index] }), {});
+        }
 
         completedTests.push ({
             data: data[row],
@@ -158,7 +166,7 @@ function makeTest(row) {
     // finally with the actual results, put them into a JSON file for use in wrs-calculator
     await fsPromises.writeFile(
         'seleniumTestResults.json', 
-        JSON.stringify(completedTests), 
+        JSON.stringify(completedTests, null, 1), 
         {encoding: 'utf8', flag: 'w'}
     );
     

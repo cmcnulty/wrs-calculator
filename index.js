@@ -6,12 +6,18 @@ const Ajv = require('ajv');
 
 function RetirementBalance( options ) {
     const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
+    const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
 
     var ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
     var validate = ajv.compile(optionsSchema);
     var valid = validate(options);
     if (!valid) {
         throw new Error(`${validate.errors[0].dataPath} - ${validate.errors[0].message}`);
+    }
+
+    const minRetirementAge = getMinimumRetirementAge( options.salary);
+    if (options.withdrawalAge < minRetirementAge) {
+        throw new Error(`Minimum retirement age not reached: ${options.withdrawalAge} < ${minRetirementAge}`);
     }
 
     this.birthday = new Date(options.birthday);
@@ -73,8 +79,7 @@ function RetirementBalance( options ) {
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
-
-
+    
     function getNormalRetirementAge(serviceCategory, startDate, combinedServiceYears) {
             /*
         Age 53:  Protective occupation employees with at least 25
@@ -89,23 +94,44 @@ function RetirementBalance( options ) {
         Age 65:  General employees, teachers and educational support
         staff. Additionally, elected officials, state executive
         retirement plan employees, and judges who first began in
-        one of these categories after December 31, 2016.*/
+        one of these categories after December 31, 2016.
+        ---
+        • General—65 (57 with 30 years of service)
+        • Protective—54 (53 with 25 years of service)
+        • Executive and Elected—62 (57 with 30 years of service); for those who become Executive
+        or Elected on or after 1/1/2017—65 (57 with 30 years of service)
+        */
         let normalRetirementAge = 0;
         switch (serviceCategory) {
             case 'general':
-                normalRetirementAge = 65;
+                normalRetirementAge = (combinedServiceYears >= 30) ? 57 : 65;
                 break;
             case 'protective_with_ss':
             case 'protective_wo_ss':
                 normalRetirementAge = (combinedServiceYears >= 25) ? 53 : 54;
                 break;
             case 'elected':
-                normalRetirementAge = (startDate >= '2017-01-01')? 65 : 62;
+                if(combinedServiceYears >= 30) {
+                    normalRetirementAge = 57;
+                } else if(startDate >= '2017-01-01') {
+                    normalRetirementAge = 65;
+                } else {
+                    normalRetirementAge = 62;
+                }
                 break;
             default: 
                 throw `invalid service category: ${serviceCategory}`;
         } 
         return normalRetirementAge;
+    }
+
+    function getMinimumRetirementAge( salary ){
+        const protective = salary.find( el => PROTECTIVE_CATEGORIES.includes(el.serviceCategory));
+        if(protective) {
+            return 50;
+        } else {
+            return 55;
+        }
     }
 
     function calculateAgeReductionFactor(serviceCategory, retirementAge, normalRetirementAge, totalYears) {

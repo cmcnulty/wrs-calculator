@@ -1,3 +1,9 @@
+what to graph:
+    income at various retirement ages (years of service)
+    income at various contribution levels (and increase factors/rates of growth)
+
+
+
 assumptions to check/test:
     It seems like combined service across categories is used for the age-reduction-factor,
     so if you work only 10 years protective, and 15 years teacher, when looking up the 
@@ -6,11 +12,13 @@ assumptions to check/test:
 
 additional options to implement:
 accelerated payments
+joint/survivor payments
+increase rate of additional contribution (percentage and flat)
+
+
 guaranteed payments
-join/survivor payments
 variable-fund adjustment
 money-market comparison
-increase rate of additional contribution
 
 for additional contributions:
 start date, stop date (actual or projected)
