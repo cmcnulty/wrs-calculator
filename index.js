@@ -4,36 +4,37 @@ const optionsSchema = require('./options-schema.json');
 const formulaMultipler = require('./formula-multiplier.json' );
 const Ajv = require('ajv');
 
-function RetirementBalance( options ) {
-    const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
-    const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
+const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
+const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
 
-    var ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
-    var validate = ajv.compile(optionsSchema);
-    var valid = validate(options);
-    if (!valid) {
-        throw new Error(`${validate.errors[0].dataPath} - ${validate.errors[0].message}`);
+class RetirementBalance {
+    constructor( options ) {
+        var ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
+        var validate = ajv.compile(optionsSchema);
+        var valid = validate(options);
+        if (!valid) {
+            throw new Error(`${validate.errors[0].dataPath} - ${validate.errors[0].message}`);
+        }
+
+        this.salary = options.salary;
+        this.birthday = new Date(options.birthday);
+        this.age = this.calculateAge(this.birthday);
+        this.withdrawalAge = options.withdrawalAge;
+        this.terminationAge = options.terminationAge;
+
+        this.currentBalance = options.currentBalance;
+        this.annualContribution = options.annualContribution;
+        this.contribution = options.contribution;
     }
 
-    this.salary = options.salary;
-    this.birthday = new Date(options.birthday);
-    this.age = calculateAge(this.birthday);
-    this.withdrawalAge = options.withdrawalAge;
-    this.terminationAge = options.terminationAge;
-
-    this.currentBalance = options.currentBalance;
-    this.annualContribution = options.annualContribution;
-    this.contribution = options.contribution;
-
-
-    RetirementBalance.prototype.calculate = function() {
-        const minRetirementAge = getMinimumRetirementAge(this.salary);
+    calculate = function() {
+        const minRetirementAge = this.getMinimumRetirementAge(this.salary);
         if (this.withdrawalAge < minRetirementAge) {
             throw new Error(`Minimum retirement age not reached: ${this.withdrawalAge} < ${minRetirementAge}`);
         }
 
         let monthlyPension = 0;
-        const totalYears = parseFloat(roundNum(this.salary.map(item => item.workingYears).reduce((prev, next) => prev + next),2));
+        const totalYears = parseFloat(RetirementBalance.roundNum(this.salary.map(item => item.workingYears).reduce((prev, next) => prev + next),2));
         for(const salary of this.salary) {
             monthlyPension += this.calculatePension(salary, totalYears);
         }
@@ -46,37 +47,37 @@ function RetirementBalance( options ) {
         };
     }
 
-    RetirementBalance.prototype.calculateMoneyPurchase = function (){
+    calculateMoneyPurchase = function (){
         const rate = moneyPurchaseCalculationFactors[this.withdrawalAge];
         const inactiveYears = this.withdrawalAge - this.terminationAge;
         const remainingActiveYears = Math.max(this.terminationAge - this.age, 0);
-        const compoundedAmountWhileWorking = calculateCompoundGrowth(this.contribution.currentBalance, this.contribution.startingContribution, remainingActiveYears, this.contribution.assumedRate);
+        const compoundedAmountWhileWorking = RetirementBalance.calculateCompoundGrowth(this.contribution.currentBalance, this.contribution.startingContribution, remainingActiveYears, this.contribution.assumedRate);
         const workingPhase = remainingActiveYears === 0 ? this.contribution.currentBalance : compoundedAmountWhileWorking.result;
         const amountContribuedWhileInactive = 0
-        const compoundedAmountAfterLeaving = calculateCompoundGrowth(workingPhase, amountContribuedWhileInactive, inactiveYears, this.contribution.assumedRate);
+        const compoundedAmountAfterLeaving = RetirementBalance.calculateCompoundGrowth(workingPhase, amountContribuedWhileInactive, inactiveYears, this.contribution.assumedRate);
         const waitingPhase = compoundedAmountAfterLeaving.result;
+        this.currentBalance = waitingPhase;
         const monthlyResult = waitingPhase * rate;
         return monthlyResult;
     }
 
-    RetirementBalance.prototype.calculatePension = function (salary, totalYears) {
-        
-        const normalRetirementAge = getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
-        const ageReductionFactor = calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
+    calculatePension = function (salary, totalYears) {
+        const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
+        const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
         const monthlyHighestSalary = salary.averageHighestAnnualSalary / 12;
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
-        return parseFloat(roundNum(monthlyPension,2));
+        return parseFloat(RetirementBalance.roundNum(monthlyPension,2));
     }
     
-    function calculateAge(birthday) { // birthday is a date
+    calculateAge(birthday) { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
     
-    function getNormalRetirementAge(serviceCategory, startDate, combinedServiceYears) {
+    getNormalRetirementAge(serviceCategory, startDate, combinedServiceYears) {
             /*
         Age 53:  Protective occupation employees with at least 25
         years of creditable service, including creditable military
@@ -121,15 +122,11 @@ function RetirementBalance( options ) {
         return normalRetirementAge;
     }
 
-    RetirementBalance.prototype.getMinimumRetirementAge = () => {
-        return getMinimumRetirementAge(this.salary);
-    }
-
     /* The SECURE Act of 2019 changed the age at which RMDs must begin. 
     *  If you were born July 1, 1949 or later your first RMD will be in the year you turn age 72. 
     *  If you were born before July 1, 1949 the age remains 70 1/2. 
     * */
-    RetirementBalance.prototype.getRequiredDistributionAge = () => {
+    getRequiredDistributionAge = () => {
         let inactiveRetirementAge = 70.5
         if (this.birthday >= new Date('1949-07-01')) {
             inactiveRetirementAge = 72
@@ -137,7 +134,7 @@ function RetirementBalance( options ) {
         return Math.max(inactiveRetirementAge, this.terminationAge);
     }
 
-    function getMinimumRetirementAge( salary ){
+    getMinimumRetirementAge( salary ) {
         const protective = salary.find( el => PROTECTIVE_CATEGORIES.includes(el.serviceCategory) && el.workingYears > 0);
         if(protective) {
             return 50;
@@ -146,7 +143,7 @@ function RetirementBalance( options ) {
         }
     }
 
-    function calculateAgeReductionFactor(serviceCategory, retirementAge, normalRetirementAge, totalYears) {
+    static calculateAgeReductionFactor(serviceCategory, retirementAge, normalRetirementAge, totalYears) {
         // console.log(arguments);
         /*
         The annuities of protective category
@@ -177,8 +174,8 @@ function RetirementBalance( options ) {
         if(['general','elected'].includes(serviceCategory)) {
             const reductionModifier = 0.00001111; //.001111% = .00001111
             // online calculator seems to round months to whole number
-            const totalMonths = parseFloat(roundNum(totalYears * 12,0));
-            monthlyReduction = (baseReduction - (reductionModifier * totalMonths));
+            const totalMonths = parseFloat(RetirementBalance.roundNum(totalYears * 12,0));
+            const monthlyReduction = (baseReduction - (reductionModifier * totalMonths));
             annualReductionAt57 = monthlyReduction*12;
 
         }
@@ -194,17 +191,17 @@ function RetirementBalance( options ) {
             retirementAge++;
         }
 
-        return parseFloat(roundNum((1 - totalReduction),3));
+        return parseFloat(RetirementBalance.roundNum((1 - totalReduction),3));
 
     }
 
-    function roundNum(num, length) { 
+    static roundNum(num, length) { 
         var number = Math.round(num * Math.pow(10, length)) / Math.pow(10, length);
         return number;
     }
 
     // wrapper so that it was easier to test altnertive modules
-    function calculateCompoundGrowth( currentBalance, annualContribution, compoundedYears, interestRate){
+    static calculateCompoundGrowth( currentBalance, annualContribution, compoundedYears, interestRate){
         // console.log(arguments);
         const result = compound(currentBalance, annualContribution, compoundedYears, interestRate);
 

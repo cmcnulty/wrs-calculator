@@ -8,7 +8,7 @@ describe ('#calculate()', function() {
     for(const i in tests) {
         let ex = transformTest(tests[i].data);
         let calc = Calculator(ex);
-        if( calc.getMinimumRetirementAge() > ex.withdrawalAge ) {
+        if( calc.getMinimumRetirementAge(ex.salary) > ex.withdrawalAge ) {
             // We have to do this test first because SeIDE returns values for 
             // ages less than min retirement age for some reason
             expect(() => calc.calculate()).to.throw('Minimum retirement age not reached');
