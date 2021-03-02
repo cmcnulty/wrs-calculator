@@ -15,11 +15,7 @@ function RetirementBalance( options ) {
         throw new Error(`${validate.errors[0].dataPath} - ${validate.errors[0].message}`);
     }
 
-    const minRetirementAge = getMinimumRetirementAge( options.salary);
-    if (options.withdrawalAge < minRetirementAge) {
-        throw new Error(`Minimum retirement age not reached: ${options.withdrawalAge} < ${minRetirementAge}`);
-    }
-
+    this.salary = options.salary;
     this.birthday = new Date(options.birthday);
     this.age = calculateAge(this.birthday);
     this.withdrawalAge = options.withdrawalAge;
@@ -31,9 +27,14 @@ function RetirementBalance( options ) {
 
 
     RetirementBalance.prototype.calculate = function() {
+        const minRetirementAge = getMinimumRetirementAge(this.salary);
+        if (this.withdrawalAge < minRetirementAge) {
+            throw new Error(`Minimum retirement age not reached: ${this.withdrawalAge} < ${minRetirementAge}`);
+        }
+
         let monthlyPension = 0;
-        const totalYears = parseFloat(roundNum(options.salary.map(item => item.workingYears).reduce((prev, next) => prev + next),2));
-        for(const salary of options.salary) {
+        const totalYears = parseFloat(roundNum(this.salary.map(item => item.workingYears).reduce((prev, next) => prev + next),2));
+        for(const salary of this.salary) {
             monthlyPension += this.calculatePension(salary, totalYears);
         }
 
@@ -55,8 +56,6 @@ function RetirementBalance( options ) {
         const compoundedAmountAfterLeaving = calculateCompoundGrowth(workingPhase, amountContribuedWhileInactive, inactiveYears, this.contribution.assumedRate);
         const waitingPhase = compoundedAmountAfterLeaving.result;
         const monthlyResult = waitingPhase * rate;
-        // console.log(rate,inactiveYears,remainingActiveYears,compoundedAmountWhileWorking,workingPhase);
-        // console.log(compoundedAmountAfterLeaving, waitingPhase, monthlyResult);
         return monthlyResult;
     }
 
@@ -65,15 +64,12 @@ function RetirementBalance( options ) {
         const normalRetirementAge = getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
         const ageReductionFactor = calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
-        // console.log(`age reduction factor: ${ageReductionFactor}, from Table: ${ageReductionFactorFromTable} formula multiplier: ${multipler}`);
         const monthlyHighestSalary = salary.averageHighestAnnualSalary / 12;
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
-        // console.log(monthlyPension);
         return parseFloat(roundNum(monthlyPension,2));
-
     }
-
+    
     function calculateAge(birthday) { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -125,8 +121,24 @@ function RetirementBalance( options ) {
         return normalRetirementAge;
     }
 
+    RetirementBalance.prototype.getMinimumRetirementAge = () => {
+        return getMinimumRetirementAge(this.salary);
+    }
+
+    /* The SECURE Act of 2019 changed the age at which RMDs must begin. 
+    *  If you were born July 1, 1949 or later your first RMD will be in the year you turn age 72. 
+    *  If you were born before July 1, 1949 the age remains 70 1/2. 
+    * */
+    RetirementBalance.prototype.getRequiredDistributionAge = () => {
+        let inactiveRetirementAge = 70.5
+        if (this.birthday >= new Date('1949-07-01')) {
+            inactiveRetirementAge = 72
+        } 
+        return Math.max(inactiveRetirementAge, this.terminationAge);
+    }
+
     function getMinimumRetirementAge( salary ){
-        const protective = salary.find( el => PROTECTIVE_CATEGORIES.includes(el.serviceCategory));
+        const protective = salary.find( el => PROTECTIVE_CATEGORIES.includes(el.serviceCategory) && el.workingYears > 0);
         if(protective) {
             return 50;
         } else {
@@ -211,6 +223,4 @@ function RetirementBalance( options ) {
 
 }
 
-module.exports = function createRetirementBalance(opt) {
-    return new RetirementBalance(opt).calculate();
-}
+module.exports = (opt) => new RetirementBalance(opt);

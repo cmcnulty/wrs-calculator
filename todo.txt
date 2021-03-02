@@ -24,3 +24,11 @@ for additional contributions:
 start date, stop date (actual or projected)
 retirementDate
 
+Notes:
+
+    // contributing years should be no more than combined workingYears, because you can only contribute
+    // during years you are active. However, you may have contributed only the first few years of your active
+    // period, or the last few years, which would make a big difference, except that any past performance 
+    // should be captured in the balance, in which case we always just track from current age to termination age
+
+

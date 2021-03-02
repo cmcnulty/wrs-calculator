@@ -1,180 +1,39 @@
-var calc = require ('./index');
+var Calculator = require ('./index');
 var expect = require('chai').expect;
 var tests = require('./seleniumTestResults.json');
 
 
 describe ('#calculate()', function() {
 
-    // https://etf.wi.gov/retirement/saving-retirement/wrs-retirement-benefit-calculations
-    /* 
-        The sample worksheet on the next page shows a formula calculation. It includes columns for 
-        post-Act 10 service. Only members in the Elected/Executive category have post-Act 10 service.
-        The sample is for a general category employee who is age 59, who has a spouse or domestic 
-        partner who is age 53.The employee has a final average monthly earnings of $2,500, 25 years of 
-        creditable service (5 years pre-2000 and 20 years post-1999), and a projectedage 62 Social 
-        Security benefit of 840.The employee participates in the Variable Fund and his total Variable 
-        Excess balance is $10,000. The employee selects a Joint Survivor 100% continued option. The 
-        estimated $840 is from the 2020 tables. The money purchase and option conversion factors are 
-        effective January 1, 2020.
-        
-    */
-    var example1 = {
-        birthday: "1977-03-31",
-        withdrawalAge: 59,
-        terminationAge: 59,
-        salary: [{
-            averageHighestAnnualSalary: 30000,
-            workingYears: 5,
-            serviceCategory: "general",
-            eraCategory: "pre2000"
-        }, {
-            averageHighestAnnualSalary: 30000,
-            workingYears: 20,
-            serviceCategory: "general",
-            eraCategory: "post1999"
-        }],
-        contribution: {
-            currentBalance: 0,
-            assumedRate: 0.04,
-            startingContribution: 0,
-            contributionIncreaseRate: 0
-        } 
-    };
-
-
-
     for(const i in tests) {
         let ex = transformTest(tests[i].data);
+        let calc = Calculator(ex);
+        if( calc.getMinimumRetirementAge() > ex.withdrawalAge ) {
+            // We have to do this test first because SeIDE returns values for 
+            // ages less than min retirement age for some reason
+            expect(() => calc.calculate()).to.throw('Minimum retirement age not reached');
 
-        if( tests[i].results.AnnuitantsLifeOnlyReg === 'ERROR' ) {
+        } else if( tests[i].results.AnnuitantsLifeOnlyReg === 'ERROR' ) {
 
+            // If SeIDE throws an exception that's not about age, we're currently not trapping it.
             it(`should pass generated test: ${i}, ERROR`, function() {
-                if(ex.withdrawalAge < 55 ) {
-                    expect(() => calc(ex)).to.throw('.withdrawalAge - should be >= 55');
-                } else {
-                    expect(() => calc(ex)).to.throw('asdf');
-                }
-                
+                expect(() => calc.calculate()).to.throw('asdf');
             });
 
         } else {
+
+            // Otherwise use the results of the SeIDE test run
             let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
             let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
     
             it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
-                // console.log(i);
-                expect(calc(ex).monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
-                expect(calc(ex).optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
-               // console.log(expectedMonthly);
+                expect(calc.calculate().monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
+                expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
             });
         }
-
-
     }
 
 
-    
-    // PASSES
-    /*
-    it('should calculate pension correctly', function(){
-        expect(calc(example1).monthlyPension).to.equal('971.64');
-    });
-    */
-
-    /*
-    https://etf.wi.gov/retirement/saving-retirement/wrs-retirement-benefit-calculations
-    */
-    var example2 = {
-    birthday: "1977-03-31",
-    withdrawalAge: 61,
-    terminationAge: 61,
-    salary: [{
-        averageHighestAnnualSalary: 41028,
-        workingYears: 2.55,
-        serviceCategory: "general",
-        eraCategory: "pre2000"
-    }, {
-        averageHighestAnnualSalary: 41028,
-        workingYears: 20.01,
-        serviceCategory: "general",
-        eraCategory: "post1999"
-    }],
-    contribution: {
-        currentBalance: 0,
-        assumedRate: 0.04,
-        startingContribution: 0,
-        contributionIncreaseRate: 0
-    }    
-    };
-/*
-    it('should calculate pension correctly with partial years', function(){
-        expect(calc(example2).monthlyPension).to.equal('1189.83');
-    });
-
-
-    var pensionOpts = {
-        birthday: '1977-03-31',
-        terminationAge: 65,
-        withdrawalAge: 65,
-        salary: [{
-            averageHighestAnnualSalary: 54000,
-            workingYears: 5,
-            serviceCategory: "general",
-            eraCategory: "post1999"
-        }],
-        contribution: {
-            currentBalance: 0,
-            assumedRate: 0.04,
-            startingContribution: 0,
-            contributionIncreaseRate: 0
-        }
-    };
-
-    // contributing years should be no more than combined workingYears, because you can only contribute
-    // during years you are active. However, you may have contributed only the first few years of your active
-    // period, or the last few years, which would make a big difference, except that any past performance 
-    // should be captured in the balance, in which case we always just track from current age to termination age
-    var moneyOpts = {
-        birthday: '1978-07-27',
-        terminationAge: 65,
-        withdrawalAge: 65,
-        salary: [{
-            averageHighestAnnualSalary: 54000,
-            workingYears: 23,
-            serviceCategory: "general",
-            eraCategory: "post1999"
-        }],
-        contribution: {
-            currentBalance: 0,
-            assumedRate: 0.04,
-            startingContribution: 2400,
-            contributionIncreaseRate: 0
-        }
-    };
-
-    it('should calculate pension correctly', function(){
-        expect(calc(pensionOpts).monthlyPension).to.equal('360.00');
-
-        const earlyRetirement = {...pensionOpts}
-        earlyRetirement.withdrawalAge = 64;
-        expect(calc(earlyRetirement).monthlyPension).to.equal('345.60');
-
-        const maxBenefitAmount = {...pensionOpts}
-        maxBenefitAmount.salary[0].workingYears = 44;
-        expect(calc(maxBenefitAmount).monthlyPension).to.equal('3150.00');
-
-        const invalidOpts = {...pensionOpts}
-        invalidOpts.contribution.currentBalance = -1;
-        expect(() => {
-            calc(invalidOpts)
-        }).to.throw();
-    });
-
-    it('should calculate money purchase correctly', function(){
-        var moneyPurchase = calc(moneyOpts);
-        expect(moneyPurchase.optionalPension).to.equal('574.75');
-    });
-*/
 });
 
 function transformTest(test) {
@@ -241,7 +100,7 @@ function transformTest(test) {
         contribution: {
             currentBalance: Number(test.employeeAdditionalContribution) + Number(test.employerAdditionalContribution),
             assumedRate: 0.00,
-            startingContribution: 0, // (roundNum(test.employeeAdditionalContribution,2)/roundNum(test.generalAfter1999,2)),
+            startingContribution: 0,
             contributionIncreaseRate: 0
         } 
     };
