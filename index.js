@@ -1,8 +1,11 @@
-const compound = require('compound-interest-calc')
-const moneyPurchaseCalculationFactors = require('./money-purchase-calculation-factors.json');
-const optionsSchema = require('./options-schema.json');
-const formulaMultipler = require('./formula-multiplier.json' );
+
 const Ajv = require('ajv');
+const compound = require('compound-interest-calc')
+
+const moneyPurchaseCalculationFactors = require('./tables/money-purchase-calculation-factors.json');
+const formulaMultipler = require('./tables/formula-multiplier.json' );
+
+const optionsSchema = require('./options-schema.json');
 
 const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
 const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
@@ -25,6 +28,7 @@ class RetirementBalance {
         this.currentBalance = options.currentBalance;
         this.annualContribution = options.annualContribution;
         this.contribution = options.contribution;
+        this.averageHighestAnnualSalary = options.averageHighestAnnualSalary;
     }
 
     calculate = function() {
@@ -65,7 +69,7 @@ class RetirementBalance {
         const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
-        const monthlyHighestSalary = salary.averageHighestAnnualSalary / 12;
+        const monthlyHighestSalary = this.averageHighestAnnualSalary / 12;
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
         return parseFloat(RetirementBalance.roundNum(monthlyPension,2));
