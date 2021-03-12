@@ -5,6 +5,7 @@
     "birthday",
     "terminationAge",
     "withdrawalAge",
+    "averageHighestAnnualSalary",
     "salary",
     "contribution"
   ],
@@ -22,22 +23,21 @@
       "minimum": 0,
       "maximum": 80
     },
+    "averageHighestAnnualSalary": {
+      "type": "number",
+      "minimum": 0
+    },    
     "salary": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "required": [
-          "averageHighestAnnualSalary",
           "workingYears",
           "serviceCategory",
           "eraCategory"
         ],
         "properties": {
-          "averageHighestAnnualSalary": {
-            "type": "number",
-            "minimum": 0
-          },
           "years": {
             "type": "number",
             "minimum": 0

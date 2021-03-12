@@ -44,55 +44,47 @@ function transformTest(test) {
         birthday: bd,
         withdrawalAge: age,
         terminationAge: age,
+        averageHighestAnnualSalary: avgSalary,
         salary: [{
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.generalBefore2000,2),
             serviceCategory: "general",
             eraCategory: "pre2000"
         }, {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.generalAfter1999,2),
             serviceCategory: "general",
             eraCategory: "post1999"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.protectiveWithSocBefore2000,2),
             serviceCategory: "protective_with_ss",
             eraCategory: "pre2000"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.protectiveWithSocAfter1999,2),
             serviceCategory: "protective_with_ss",
             eraCategory: "post1999"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.protectiveNoSocBefore2000,2),
             serviceCategory: "protective_wo_ss",
             eraCategory: "pre2000"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.protectivNoSocAfter1999,2),
             serviceCategory: "protective_wo_ss",
             eraCategory: "post1999"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.electedBefore2000,2),
             serviceCategory: "elected",
             eraCategory: "pre2000"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.electedAfter1999,2),
             serviceCategory: "elected",
             eraCategory: "post1999"
         },
         {
-            averageHighestAnnualSalary: avgSalary,
             workingYears: roundNum(test.electedAfterAct10,2),
             serviceCategory: "elected",
             eraCategory: "postAct10"
