@@ -4,6 +4,9 @@ const compound = require('compound-interest-calc')
 
 const moneyPurchaseCalculationFactors = require('./tables/money-purchase-calculation-factors.json');
 const formulaMultipler = require('./tables/formula-multiplier.json' );
+const nonProtectiveGuaranteedFactors = require('./tables/non-protective-guaranteed-factors.json');
+const protectiveGuaranteedFactors = require('./tables/protective-guaranteed-factors.json');
+const survivor75 = require('./tables/75-percent-survivor.json');
 
 const optionsSchema = require('./options-schema.json');
 
@@ -21,7 +24,13 @@ class RetirementBalance {
 
         this.salary = options.salary;
         this.birthday = new Date(options.birthday);
+
         this.age = this.calculateAge(this.birthday);
+        if(options.survivorBirthday) {
+            this.survivorBirthday = new Date(options.survivorBirthday);
+            this.survivorAge = this.calculateAge(this.survivorBirthday);
+        }
+
         this.withdrawalAge = options.withdrawalAge;
         this.terminationAge = options.terminationAge;
 
@@ -37,16 +46,33 @@ class RetirementBalance {
             throw new Error(`Minimum retirement age not reached: ${this.withdrawalAge} < ${minRetirementAge}`);
         }
 
-        let monthlyPension = 0;
+        let monthlyPension = {
+            annuitantsLife: 0,
+            guaranteed60: 0,
+            guaranteed180: 0,
+            survivor75:0,
+            survivor100: 0,
+            eitherSurvivor75: 0,
+            survivor100with180: 0
+        };
+        const allResults = {
+            regular: {...monthlyPension},
+            acceleratedUntil62: {...monthlyPension},
+            acceleratedAfter62: {...monthlyPension},
+        };
+
         const totalYears = parseFloat(RetirementBalance.roundNum(this.salary.map(item => item.workingYears).reduce((prev, next) => prev + next),2));
         for(const salary of this.salary) {
-            monthlyPension += this.calculatePension(salary, totalYears);
+            const aPension = this.calculatePension(salary, totalYears);
+            allResults.regular = this.mergeResults([aPension.regular, allResults.regular]);
+            allResults.acceleratedUntil62 = this.mergeResults([aPension.acceleratedUntil62, allResults.acceleratedUntil62]);
+            allResults.acceleratedAfter62 = this.mergeResults([aPension.acceleratedAfter62, allResults.acceleratedAfter62]);
         }
 
         const monthlyResult = this.calculateMoneyPurchase();
 
         return{
-            monthlyPension: monthlyPension.toFixed(2),
+            ...allResults, // allResults.regular.annuitantsLife.toFixed(2),
             optionalPension: monthlyResult.toFixed(2),
         };
     }
@@ -62,19 +88,67 @@ class RetirementBalance {
         const waitingPhase = compoundedAmountAfterLeaving.result;
         this.currentBalance = waitingPhase;
         const monthlyResult = waitingPhase * rate;
+        /*
+            additionalContributions: {...resultSet},
+            additionalCertain24: 0,
+            additionalCertain60: 0,
+            additionalCertain120: 0,
+            lumpSum: 0,
+*/
         return monthlyResult;
     }
 
     calculatePension = function (salary, totalYears) {
+        const isProtective = PROTECTIVE_CATEGORIES.includes(salary.serviceCategory);
         const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
+
+        const guaranteedFactor60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
+        const guaranteedFactor180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
+
+        const survivor75Factor = this.getSurvivor75Factor(this.age, this.survivorAge);
+
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
         const monthlyHighestSalary = this.averageHighestAnnualSalary / 12;
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
-        return parseFloat(RetirementBalance.roundNum(monthlyPension,2));
+
+        const resultSet = {
+            annuitantsLife: 0,
+            guaranteed60: 0,
+            guaranteed180: 0,
+            survivor75:0,
+            survivor100: 0,
+            eitherSurvivor75: 0,
+            survivor100with180: 0
+        };
+        const allResults = {
+            regular: {...resultSet},
+            acceleratedUntil62: {...resultSet},
+            acceleratedAfter62: {...resultSet},
+        };
+        allResults.regular.annuitantsLife = parseFloat(RetirementBalance.roundNum(monthlyPension,2));
+        allResults.regular.guaranteed60 = guaranteedFactor60 * monthlyPension;
+        allResults.regular.guaranteed180 = guaranteedFactor180 * monthlyPension;
+        allResults.regular.survivor75 = survivor75Factor * monthlyPension;
+        return allResults
     }
     
+    mergeResults = function ( data ) {
+        const result = {};       
+        data.forEach(resultSet => {
+          for (let [key, value] of Object.entries(resultSet)) {
+            if (result[key]) {
+              result[key] += value;
+            } else {
+              result[key] = value;
+            }
+          }
+        });
+        return result;
+      };
+      
+
     calculateAge(birthday) { // birthday is a date
         var ageDifMs = Date.now() - birthday.getTime();
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -183,7 +257,7 @@ class RetirementBalance {
             annualReductionAt57 = monthlyReduction*12;
 
         }
-        
+
         let totalReduction = 0;
         // todo - this could be ninja-fied with an array fill
         while (normalRetirementAge > retirementAge){
@@ -197,6 +271,24 @@ class RetirementBalance {
 
         return parseFloat(RetirementBalance.roundNum((1 - totalReduction),3));
 
+    }
+
+    getGuaranteedFactor(isProtective, age, normalRetirementAge, months) {
+        let factorTable;
+        let effAge;
+        if(isProtective){
+            factorTable = protectiveGuaranteedFactors;
+            effAge = Math.min(age, normalRetirementAge);         
+        } else {
+            factorTable = nonProtectiveGuaranteedFactors;
+            effAge = Math.min(age, 62);               
+        }
+
+        return (factorTable[effAge] && factorTable[effAge][months]) || 0;
+    }
+
+    getSurvivor75Factor(age, survivorAge) {
+        return (survivor75[survivorAge] && survivor75[survivorAge][age]) || 0;
     }
 
     static roundNum(num, length) { 

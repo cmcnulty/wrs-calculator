@@ -24,10 +24,16 @@ describe ('#calculate()', function() {
 
             // Otherwise use the results of the SeIDE test run
             let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+            let expectedGuaranteed60 = Number(tests[i].results.SixtyPaymentsReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+            let expectedGuaranteed180 = Number(tests[i].results.OneEightyPaymentsGuaranteedReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+            let expectedSurvivor75 = Number(tests[i].results.Survivor75Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
             let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
     
             it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
-                expect(calc.calculate().monthlyPension).to.equal(expectedMonthly, `pension test: ${i}`);
+                expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test: ${i}`);
+                expect(calc.calculate().regular.guaranteed60.toFixed(2)).to.equal(expectedGuaranteed60, `guaranteed 60 test: ${i}`);
+                expect(calc.calculate().regular.guaranteed180.toFixed(2)).to.equal(expectedGuaranteed180, `guaranteed 180 test: ${i}`);
+                expect(calc.calculate().regular.survivor75.toFixed(2)).to.equal(expectedSurvivor75, `guaranteed 180 test: ${i}`);
                 expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
             });
         }

@@ -23,6 +23,10 @@
       "minimum": 0,
       "maximum": 80
     },
+    "survivorBirthday": {
+      "type": "string",
+      "format": "date"
+    },
     "averageHighestAnnualSalary": {
       "type": "number",
       "minimum": 0
