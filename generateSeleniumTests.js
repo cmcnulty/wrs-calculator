@@ -15,7 +15,7 @@ const inputColumns = [
     "name",
     "birthDate",
     "retireDate",
-    "survivorRetireDate",
+    "survivorBirthDate",
     "survivorSpouse",
     "socialSecurityAt62",
     "generalBefore2000","generalAfter1999",
