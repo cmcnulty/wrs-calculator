@@ -29,7 +29,7 @@ describe ('#calculate()', function() {
             let expectedSurvivor75 = Number(tests[i].results.Survivor75Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
             let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
     
-            it(`should pass generated test: ${i}, ${expectedMonthly}, ${expectedOptional}`, function(){
+            it(`should pass generated test: ${i}, ${ex.name}`, function(){
                 expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test: ${i}`);
                 expect(calc.calculate().regular.guaranteed60.toFixed(2)).to.equal(expectedGuaranteed60, `guaranteed 60 test: ${i}`);
                 expect(calc.calculate().regular.guaranteed180.toFixed(2)).to.equal(expectedGuaranteed180, `guaranteed 180 test: ${i}`);
@@ -46,8 +46,11 @@ function transformTest(test) {
     const age = getAgeOnDate(test.birthDate, test.retireDate)
     const avgSalary = getAverageSalary(test);
     const bd = new Date(test.birthDate).toISOString().substr(0,10)
+    const survivorBd = new Date(test.survivorBirthDate).toISOString().substr(0,10)
     var example1 = {
+        name: test.name,
         birthday: bd,
+        survivorBirthday: survivorBd,
         withdrawalAge: age,
         terminationAge: age,
         averageHighestAnnualSalary: avgSalary,
