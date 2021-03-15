@@ -46,7 +46,7 @@ class RetirementBalance {
         this.averageHighestAnnualSalary = options.averageHighestAnnualSalary;
     }
 
-    calculate = function() {
+    calculate () {
         const minRetirementAge = this.getMinimumRetirementAge(this.salary);
         if (this.withdrawalAge < minRetirementAge) {
             throw new Error(`Minimum retirement age not reached: ${this.withdrawalAge} < ${minRetirementAge}`);
@@ -83,7 +83,7 @@ class RetirementBalance {
         };
     }
 
-    calculateMoneyPurchase = function (){
+    calculateMoneyPurchase (){
         const rate = moneyPurchaseCalculationFactors[this.withdrawalAge];
         const inactiveYears = this.withdrawalAge - this.terminationAge;
         const remainingActiveYears = Math.max(this.terminationAge - this.age, 0);
@@ -104,9 +104,9 @@ class RetirementBalance {
         return monthlyResult;
     }
 
-    calculatePension = function (salary, totalYears) {
+    calculatePension (salary, totalYears) {
         const isProtective = PROTECTIVE_CATEGORIES.includes(salary.serviceCategory);
-        const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01',totalYears);
+        const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01', totalYears);
 
         const guaranteedFactor60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
         const guaranteedFactor180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
@@ -143,7 +143,7 @@ class RetirementBalance {
         return allResults
     }
     
-    mergeResults = function ( data ) {
+    mergeResults ( data ) {
         const result = {};       
         data.forEach(resultSet => {
           for (let [key, value] of Object.entries(resultSet)) {
@@ -217,12 +217,12 @@ class RetirementBalance {
     *  If you were born July 1, 1949 or later your first RMD will be in the year you turn age 72. 
     *  If you were born before July 1, 1949 the age remains 70 1/2. 
     * */
-    getRequiredDistributionAge = () => {
+    getRequiredDistributionAge (birthday, terminationAge) {
         let inactiveRetirementAge = 70.5
-        if (this.birthday >= new Date('1949-07-01')) {
+        if (birthday >= new Date('1949-07-01')) {
             inactiveRetirementAge = 72
         } 
-        return Math.max(inactiveRetirementAge, this.terminationAge);
+        return Math.max(inactiveRetirementAge, terminationAge);
     }
 
     getMinimumRetirementAge( salary ) {
