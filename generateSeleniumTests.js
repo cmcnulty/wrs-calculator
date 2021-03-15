@@ -16,7 +16,7 @@ const inputColumns = [
     "birthDate",
     "retireDate",
     "survivorBirthDate",
-    "survivorSpouse",
+    "isSpouse",
     "socialSecurityAt62",
     "generalBefore2000","generalAfter1999",
     "protectiveWithSocBefore2000","protectiveWithSocAfter1999",
@@ -67,7 +67,6 @@ const outputColumns = [
     'AddContributionsLumpSum',
 ];
 
-const radioColumns = ["survivorSpouse","terminateBefore2000", "variableDifferenceType"];
 const storeTemplate = {
     "id": "",
     "comment": "",

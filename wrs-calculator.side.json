@@ -26,6 +26,53 @@
       ],
       "value": "${birthDate}"
     }, {
+      "id": "cb8b8282-0787-4f17-9c84-a6d617c7f40d",
+      "comment": "survivorBirthDate",
+      "command": "type",
+      "target": "name=txtJSBirthDate",
+      "targets": [
+        ["name=txtJSBirthDate", "name"],
+        ["css=input:nth-child(15)", "css:finder"],
+        ["xpath=//input[@name='txtJSBirthDate']", "xpath:attributes"],
+        ["xpath=//input[4]", "xpath:position"]
+      ],
+      "value": "${survivorBirthDate}"
+    }, {
+      "id": "05257b69-ac15-4b19-8854-b8c799a6a552",
+      "comment": "",
+      "command": "if",
+      "target": "${isSpouse} = 1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "40d95aad-d64d-47cc-b23f-bcccf574f192",
+      "comment": "isSpouse",
+      "command": "click",
+      "target": "//input[@name='optJtSurvSpInd' and @value=1]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e81dab81-a5a2-4e4d-b1b2-5ac5dc56a4f6",
+      "comment": "",
+      "command": "else",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9829a0f0-3161-43de-a2f4-3fef2ca570b9",
+      "comment": "isSpouse",
+      "command": "click",
+      "target": "//input[@name='optJtSurvSpInd' and @value=2]",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a3bd11f2-1bfd-437e-bb77-c8f72a7e403b",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
       "id": "c95eb856-fda9-4c41-b062-faae0b09c96b",
       "comment": "retireDate",
       "command": "type",
