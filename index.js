@@ -26,13 +26,19 @@ class RetirementBalance {
         this.birthday = new Date(options.birthday);
 
         this.age = this.calculateAge(this.birthday);
-        if(options.survivorBirthday) {
-            this.survivorBirthday = new Date(options.survivorBirthday);
-            this.survivorAge = this.calculateAge(this.survivorBirthday);
-        }
+
 
         this.withdrawalAge = options.withdrawalAge;
         this.terminationAge = options.terminationAge;
+
+        const withdrawalDate = new Date(this.birthday);
+        withdrawalDate.setFullYear(withdrawalDate.getFullYear() + this.withdrawalAge);
+        this.withdrawalDate = withdrawalDate
+
+        if(options.survivorBirthday) {
+            this.survivorBirthday = new Date(options.survivorBirthday);
+            this.survivorAgeAtRetirement = this.calculateAge(this.survivorBirthday, this.withdrawalDate);
+        }
 
         this.currentBalance = options.currentBalance;
         this.annualContribution = options.annualContribution;
@@ -71,7 +77,7 @@ class RetirementBalance {
 
         const monthlyResult = this.calculateMoneyPurchase();
 
-        return{
+        return {
             ...allResults, // allResults.regular.annuitantsLife.toFixed(2),
             optionalPension: monthlyResult.toFixed(2),
         };
@@ -105,11 +111,14 @@ class RetirementBalance {
         const guaranteedFactor60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
         const guaranteedFactor180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
 
-        const survivor75Factor = this.getSurvivor75Factor(this.age, this.survivorAge);
+        const survivor75Factor = this.getSurvivor75Factor(isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
 
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
-        const monthlyHighestSalary = this.averageHighestAnnualSalary / 12;
+
+        // flooring the monthly salary makes it match - is it right? :shrug:
+        const monthlyHighestSalary = Math.floor(this.averageHighestAnnualSalary / 12);
+
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
 
@@ -138,19 +147,23 @@ class RetirementBalance {
         const result = {};       
         data.forEach(resultSet => {
           for (let [key, value] of Object.entries(resultSet)) {
-            if (result[key]) {
-              result[key] += value;
-            } else {
-              result[key] = value;
+                if (result[key]) {
+                    result[key] += value;
+                } else {
+                    result[key] = value;
+                }
             }
-          }
         });
         return result;
-      };
+    };
       
 
-    calculateAge(birthday) { // birthday is a date
-        var ageDifMs = Date.now() - birthday.getTime();
+    calculateAge(birthday, ageOn) { // birthday is a date
+        if (ageOn === undefined) {
+            ageOn = new Date();
+        }
+        const timeNow = ageOn.getTime();
+        var ageDifMs = timeNow - birthday.getTime();
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
@@ -287,13 +300,27 @@ class RetirementBalance {
         return (factorTable[effAge] && factorTable[effAge][months]) || 0;
     }
 
-    getSurvivor75Factor(age, survivorAge) {
-        return (survivor75[survivorAge] && survivor75[survivorAge][age]) || 0;
+    getSurvivor75Factor(isProtective, age, normalRetirementAge, survivorAge) {
+        const effAge = isProtective ? Math.min(age, normalRetirementAge) :  Math.min(age, 62);
+        let factor = 0;
+        if (survivor75[survivorAge]) {
+            const ageArray = survivor75[survivorAge];
+            factor = ageArray && ageArray[effAge]
+        } else if (survivor75[survivorAge + 1] && survivor75[survivorAge - 1] && 
+            survivor75[survivorAge + 1][effAge] && survivor75[survivorAge + 1][effAge]) {
+            factor = Math.round(survivor75[survivorAge + 1][effAge] + survivor75[survivorAge + 1][effAge] / 2, 3);
+        } 
+        return factor || 0;
     }
 
     static roundNum(num, length) { 
         var number = Math.round(num * Math.pow(10, length)) / Math.pow(10, length);
         return number;
+    }
+
+    static floorNum(num, length) {
+        var number = Math.floor(num * Math.pow(10, length)) / Math.pow(10, length);
+        return number;       
     }
 
     // wrapper so that it was easier to test altnertive modules
