@@ -64,7 +64,7 @@ Limitations
 1. Spouse's(*) birthday:
     Can be non-spouse as long as they're no more than ten years younger than you
     [date] ( you can leave this blank if you're not married, or you don't want to include spousal retirement options)
-1. What age do you plan to start collecting benefits?
+1. What age do you plan to start collecting benefits? (optional - can provide graph of possibilities)
     [55-75] (validate according to job category, etc)
 ### Second Section
 First let's rule out some more complicated scenarios:
@@ -82,7 +82,7 @@ First let's rule out some more complicated scenarios:
     [general, etc.]
 
 1. So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
-    [y] (pre-set with number of years until you collect benefits)
+    [y] (pre-set with number of years until you collect benefits) (optional, can provide graph of possibilities)
     
 1. Summary:
         You [started/will start] working for a WRS employer in yyyy when you [were/are] x years old
