@@ -41,14 +41,14 @@ for additional contributions:
 start date, stop date (actual or projected)
 retirementDate
 
-# More Notes:
+## More Notes:
 
 Contributing years should be no more than combined workingYears, because you can only contribute
 during years you are active. However, you may have contributed only the first few years of your active
 period, or the last few years, which would make a big difference, except that any past performance 
 should be captured in the balance, in which case we always just track from current age to termination age
 
-# Ideas for UI:
+## Ideas for UI:
 Limitations 
 1) Does not currently take into account participation in the Variable Trust Fund.
     The Variable Trust Fund in deliberately non-diversified across classes (no bonds, real estate, etc), it doesn't include a floor on losses, and it doesn't smooth the stock market volality. 
@@ -57,50 +57,51 @@ Limitations
 2) Other unusual things that I'm not worrying about: 
     if you enter a survivor that isn't a spouse, and they're more than 10 years younger than you, different rules apply
 
-Birthday
+## Form
+### First Section
+8. Birthday
     [date]
-Spouse's(*) birthday:
+8. Spouse's(*) birthday:
     Can be non-spouse as long as they're no more than ten years younger than you
     [date] ( you can leave this blank if you're not married, or you don't want to include spousal retirement options)
-What age do you plan to start collecting benefits?
+8. What age do you plan to start collecting benefits?
     [55-75] (validate according to job category, etc)
-
-Question two:
-    First let's rule out some more complicated scenarios:
-        Have you worked more than one job category?
+### Second Section
+First let's rule out some more complicated scenarios:
+8. Have you worked more than one job category?
         [y/n]
-        Have you worked for two (or more) separate, non-connected periods of time?
+8. Have you worked for two (or more) separate, non-connected periods of time?
         [y/n]
 
     Phew! That keeps things nice and simple:
 
-    What month & year did you start? (this can be in the future if you're considering a job)
+8. What month & year did you start? (this can be in the future if you're considering a job)
     [month][year]
 
-    What category does this job fall into?
+8. What category does this job fall into?
     [general, etc.]
 
-    So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
+8. So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
     [y] (pre-set with number of years until you collect benefits)
     
-    Summary:
+8. Summary:
         You [started/will start] working for a WRS employer in yyyy when you [were/are] x years old
         You [will work/worked] for a total of x years until [you were/you'll be] z.
         You [started/plan on] collecting benefits in yyyy when [you were/you'll be] z years old. 
         Does this seem right?
         [y/n]
 
-    Multiple categories or stints:
+8. Multiple categories or stints:
         If you've worked across multiple categories or stints, use this section to determine your correct numbers.
         [category][start month][start year] - [actively employed] OR [end month][end year]
 
-    What is the average annual salary of the highest three years of getting paid?
+8. What is the average annual salary of the highest three years of getting paid?
         Example: Your three higest paid years were $42,000, $42,000 and $36,000 - so you'd add those up, divide by three and enter in $40,000
         * If you worked part-time, you can multiply it out as if you were full-time (e.g. if you made $15,000 working half-time, enter $30,000)
         * You can feel free to make up a number if you think you'll get paid more in the future - we're not the IRS!
 
 
-    Additional Contributions:
+8. Additional Contributions:
         Did you know that you can permanently increase your retirement income by adding your own funds now while you're working? 
         Research has shown that retirement income makes people much happier than a large nest-egg, and in Wisconsin we're blessed with a very stable, fully-funded retirement system. 
         Use this section to determine how much you can juice your retirement income by contributing a little with each paycheck while you're working.
