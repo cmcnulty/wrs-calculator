@@ -1,10 +1,12 @@
-selenium notes:
- attempting to put the selenium tests into a suite to run them in parallel fails because
+# Development notes
+
+## Selenium notes
+Attempting to put the selenium tests into a suite to run them in parallel fails because
  there is no way to allow them to keep running on failure (including using verify instead of assert)
  we could capture the std out instead of going through the work of writing out a file, picking it up and deleting it...
  however, the file output is much cleaner than the std out, so it's nicer to work with.
 
-survivor file gaps notes:
+## Survivor file gaps notes:
  It appears that the gap years in the survivor files are intended to just split the difference,
  however it looks like it's not consistent between rounding and flooring, e.g.:
 
@@ -20,21 +22,16 @@ and therefore we'll have to
  Alternatively, we can just unit test the ones that work, and not sweat the other ones. We could also try to request the full 
  table from WRS.
 
+## Visualization:
 what to graph:
     income at various retirement ages (years of service)
     income at various contribution levels (and increase factors/rates of growth)
 
-assumptions to check/test:
-    It seems like combined service across categories is used for the age-reduction-factor,
-    so if you work only 10 years protective, and 15 years teacher, when looking up the 
-    age-reduction factor you use 25 years of service for both look ups. confirmed with 
-    WRS calculator, couldn't find clear documentation
-
+## Todo:
 additional options to implement:
 accelerated payments
 joint/survivor payments
 increase rate of additional contribution (percentage and flat)
-
 
 guaranteed payments
 variable-fund adjustment
@@ -44,14 +41,14 @@ for additional contributions:
 start date, stop date (actual or projected)
 retirementDate
 
-Notes:
+# More Notes:
 
-    // contributing years should be no more than combined workingYears, because you can only contribute
-    // during years you are active. However, you may have contributed only the first few years of your active
-    // period, or the last few years, which would make a big difference, except that any past performance 
-    // should be captured in the balance, in which case we always just track from current age to termination age
+Contributing years should be no more than combined workingYears, because you can only contribute
+during years you are active. However, you may have contributed only the first few years of your active
+period, or the last few years, which would make a big difference, except that any past performance 
+should be captured in the balance, in which case we always just track from current age to termination age
 
-Ideas for UI:
+# Ideas for UI:
 Limitations 
 1) Does not currently take into account participation in the Variable Trust Fund.
     The Variable Trust Fund in deliberately non-diversified across classes (no bonds, real estate, etc), it doesn't include a floor on losses, and it doesn't smooth the stock market volality. 
@@ -59,8 +56,6 @@ Limitations
     Additionally you're participation in the Variable fund is fixed at 50%, and so you still get the benefits of the floor & smoothing on the 50% that is invested in the Core Fund.
 2) Other unusual things that I'm not worrying about: 
     if you enter a survivor that isn't a spouse, and they're more than 10 years younger than you, different rules apply
-
-
 
 Birthday
     [date]
