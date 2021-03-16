@@ -59,59 +59,59 @@ Limitations
 
 ## Form
 ### First Section
-8. Birthday
+1. Birthday
     [date]
-8. Spouse's(*) birthday:
+1. Spouse's(*) birthday:
     Can be non-spouse as long as they're no more than ten years younger than you
     [date] ( you can leave this blank if you're not married, or you don't want to include spousal retirement options)
-8. What age do you plan to start collecting benefits?
+1. What age do you plan to start collecting benefits?
     [55-75] (validate according to job category, etc)
 ### Second Section
 First let's rule out some more complicated scenarios:
-8. Have you worked more than one job category?
+1. Have you worked more than one job category?
         [y/n]
-8. Have you worked for two (or more) separate, non-connected periods of time?
+1. Have you worked for two (or more) separate, non-connected periods of time?
         [y/n]
 
     Phew! That keeps things nice and simple:
 
-8. What month & year did you start? (this can be in the future if you're considering a job)
+1. What month & year did you start? (this can be in the future if you're considering a job)
     [month][year]
 
-8. What category does this job fall into?
+1. What category does this job fall into?
     [general, etc.]
 
-8. So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
+1. So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
     [y] (pre-set with number of years until you collect benefits)
     
-8. Summary:
+1. Summary:
         You [started/will start] working for a WRS employer in yyyy when you [were/are] x years old
         You [will work/worked] for a total of x years until [you were/you'll be] z.
         You [started/plan on] collecting benefits in yyyy when [you were/you'll be] z years old. 
         Does this seem right?
         [y/n]
 
-8. Multiple categories or stints:
+1. Multiple categories or stints:
         If you've worked across multiple categories or stints, use this section to determine your correct numbers.
         [category][start month][start year] - [actively employed] OR [end month][end year]
 
-8. What is the average annual salary of the highest three years of getting paid?
+1. What is the average annual salary of the highest three years of getting paid?
         Example: Your three higest paid years were $42,000, $42,000 and $36,000 - so you'd add those up, divide by three and enter in $40,000
         * If you worked part-time, you can multiply it out as if you were full-time (e.g. if you made $15,000 working half-time, enter $30,000)
         * You can feel free to make up a number if you think you'll get paid more in the future - we're not the IRS!
 
 
-8. Additional Contributions:
+### Additional Contributions:
         Did you know that you can permanently increase your retirement income by adding your own funds now while you're working? 
         Research has shown that retirement income makes people much happier than a large nest-egg, and in Wisconsin we're blessed with a very stable, fully-funded retirement system. 
         Use this section to determine how much you can juice your retirement income by contributing a little with each paycheck while you're working.
 
-        If you've made any voluntary additional contributions to your retirement, what's the current balance?
-        Monthly contribution amount:
-        Increase this amount each year:
-        Percentage growth: 4%
-    
-    Variable Fund Participation:
-        Excess or Deficiency amount
-        Money Purchase current balance
+1. If you've made any voluntary additional contributions to your retirement, what's the current balance?
+1. Monthly contribution amount:
+1. Increase this amount each year:
+1. Percentage growth: 4%
+   
+### Variable Fund Participation:
+1. Excess or Deficiency amount
+1. Money Purchase current balance
     
