@@ -1,59 +1,70 @@
 var Calculator = require ('./index');
 var expect = require('chai').expect;
-var tests = require('./seleniumTestResults.json');
-
+var glob = require( 'glob' );
 
 describe ('#calculate()', function() {
-
-    for(const i in tests) {
-        let ex = transformTest(tests[i].data);
-        let calc = Calculator(ex);
-        if( calc.getMinimumRetirementAge(ex.salary) > ex.withdrawalAge ) {
-            // We have to do this test first because SeIDE returns values for 
-            // ages less than min retirement age for some reason
-            expect(() => calc.calculate()).to.throw('Minimum retirement age not reached');
-
-        } else if( tests[i].results.AnnuitantsLifeOnlyReg === 'ERROR' ) {
-
-            // If SeIDE throws an exception that's not about age, we're currently not trapping it.
-            it(`should pass generated test: ${i}, ERROR`, function() {
-                expect(() => calc.calculate()).to.throw('asdf');
-            });
-
-        } else {
-
-            // Otherwise use the results of the SeIDE test run
-            let expectedMonthly = Number(tests[i].results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-            let expectedGuaranteed60 = Number(tests[i].results.SixtyPaymentsReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-            let expectedGuaranteed180 = Number(tests[i].results.OneEightyPaymentsGuaranteedReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-            let expectedSurvivor75 = Number(tests[i].results.Survivor75Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
-            let expectedOptional = Number(tests[i].results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
-    
-            it(`should pass generated test: ${i}, ${ex.name}`, function(){
-                expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test: ${i}`);
-                expect(calc.calculate().regular.guaranteed60.toFixed(2)).to.equal(expectedGuaranteed60, `guaranteed 60 test: ${i}`);
-                expect(calc.calculate().regular.guaranteed180.toFixed(2)).to.equal(expectedGuaranteed180, `guaranteed 180 test: ${i}`);
-                expect(calc.calculate().regular.survivor75.toFixed(2)).to.equal(expectedSurvivor75, `guaranteed 180 test: ${i}`);
-                expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib: ${i}`);
-            });
+    glob.sync( './test-data/**/*.json' ).forEach( function( file ) {
+        var tests = require(file);
+        for(const i in tests) {
+            describe('#dunno()', testRow.bind(null,tests[i]));
         }
-    }
-
-
+    });
 });
+
+function testRow (testData) {
+    let ex = transformTest(testData.data);
+    let calc = Calculator(ex);
+    if( calc.getMinimumRetirementAge(ex.salary) > ex.withdrawalAge ) {
+        // We have to do this test first because SeIDE returns values for
+        // ages less than min retirement age for some reason
+        expect(() => calc.calculate()).to.throw('Minimum retirement age not reached');
+
+    } else if( testData.results.AnnuitantsLifeOnlyReg === 'ERROR' ) {
+
+        // If SeIDE throws an exception that's not about age, we're currently not trapping it.
+        it(`should pass generated test: ERROR`, function() {
+            expect(() => calc.calculate()).to.throw('asdf');
+        });
+
+    } else {
+
+        // Otherwise use the results of the SeIDE test run
+        let expectedMonthly = Number(testData.results.AnnuitantsLifeOnlyReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedGuaranteed60 = Number(testData.results.SixtyPaymentsReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedGuaranteed180 = Number(testData.results.OneEightyPaymentsGuaranteedReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedSurvivor75 = Number(testData.results.Survivor75Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedOptional = Number(testData.results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
+
+        it(`should pass generated test: ${ex.name}`, function(){
+            expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test`);
+            expect(calc.calculate().regular.guaranteed60.toFixed(2)).to.equal(expectedGuaranteed60, `guaranteed 60 test`);
+            expect(calc.calculate().regular.guaranteed180.toFixed(2)).to.equal(expectedGuaranteed180, `guaranteed 180 test`);
+            expect(calc.calculate().regular.survivor75.toFixed(2)).to.equal(expectedSurvivor75, `guaranteed 180 test`);
+            expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib`);
+        });
+    }
+}
 
 function transformTest(test) {
     const age = getAgeOnDate(test.birthDate, test.retireDate)
     const avgSalary = getAverageSalary(test);
     const bd = new Date(test.birthDate).toISOString().substr(0,10)
-    const survivorBd = new Date(test.survivorBirthDate).toISOString().substr(0,10)
-    var example1 = {
+
+    const example1 = {
         name: test.name,
         birthday: bd,
-        survivorBirthday: survivorBd,
         withdrawalAge: age,
         terminationAge: age,
         averageHighestAnnualSalary: avgSalary,
+    };
+
+    if( test.survivorBirthDate !== "") {
+        const survivorBd = new Date(test.survivorBirthDate).toISOString().substr(0,10);
+        example1.survivorBirthday = survivorBd;
+    }
+
+    finalData = {
+        ...example1,
         salary: [{
             workingYears: roundNum(test.generalBefore2000,2),
             serviceCategory: "general",
@@ -103,10 +114,10 @@ function transformTest(test) {
             assumedRate: 0.00,
             startingContribution: 0,
             contributionIncreaseRate: 0
-        } 
+        }
     };
 
-    return example1;
+    return finalData;
 }
 
 function getAgeOnDate(birthDate, futureDate){
@@ -114,20 +125,20 @@ function getAgeOnDate(birthDate, futureDate){
     let fd = new Date(futureDate);
     let futureBd = new Date(bd);
     futureBd.setYear(fd.getFullYear());
-    let x = (futureBd>fd)?(fd.getFullYear() - bd.getFullYear()-1):fd.getFullYear() - bd.getFullYear();    
+    let x = (futureBd>fd)?(fd.getFullYear() - bd.getFullYear()-1):fd.getFullYear() - bd.getFullYear();
     return x;
 }
 
 function getAverageSalary(test){
     const avgSalary = (
-        (test.yearOneHighestEarnings * test.yearOneService) + 
-        (test.yearTwoHighestEarnings * test.yearTwoService) + 
+        (test.yearOneHighestEarnings * test.yearOneService) +
+        (test.yearTwoHighestEarnings * test.yearTwoService) +
         (test.yearThreeHighestEarnings * test.yearThreeService)
     ) / 3;
     return avgSalary;
 }
 
-function roundNum(num, length) { 
+function roundNum(num, length) {
     var number = Math.round(num * Math.pow(10, length)) / Math.pow(10, length);
     return number;
 }
