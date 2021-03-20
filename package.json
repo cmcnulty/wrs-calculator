@@ -18,7 +18,8 @@
     "chai": "^4.2.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "testGen": "node test-generator/generateSeleniumTests"
   },
   "author": "",
   "license": "ISC"
