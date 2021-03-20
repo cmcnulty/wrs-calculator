@@ -18,23 +18,16 @@ and therefore we'll have to
  fill in the gaps by actually running hundreds of selenium tests to actually observe the factors...
  but that will be tricky because generally it won't use age above retirement age, it'll use normal retirement age. 
  Alternatively, we can just unit test the ones that work, and not sweat the other ones. We could also try to request the full 
- table from WRS.
+ table from WRS. Or we could create two tables one for gaps and one for downloaded data.
 
 what to graph:
     income at various retirement ages (years of service)
     income at various contribution levels (and increase factors/rates of growth)
 
-assumptions to check/test:
-    It seems like combined service across categories is used for the age-reduction-factor,
-    so if you work only 10 years protective, and 15 years teacher, when looking up the 
-    age-reduction factor you use 25 years of service for both look ups. confirmed with 
-    WRS calculator, couldn't find clear documentation
-
 additional options to implement:
 accelerated payments
 joint/survivor payments
 increase rate of additional contribution (percentage and flat)
-
 
 guaranteed payments
 variable-fund adjustment
