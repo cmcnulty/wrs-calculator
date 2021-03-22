@@ -32,17 +32,14 @@ what to graph:
 
 ## Todo:
 additional options to implement:
-accelerated payments
-joint/survivor payments
-increase rate of additional contribution (percentage and flat)
-
-guaranteed payments
-variable-fund adjustment
-money-market comparison
+* accelerated payments
+* variable-fund adjustment
+* money-market comparison
 
 for additional contributions:
-start date, stop date (actual or projected)
-retirementDate
+* increase rate of additional contribution (percentage and flat)
+* start date, stop date (actual or projected)
+* retirementDate
 
 ## More Notes:
 
