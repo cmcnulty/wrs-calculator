@@ -9,18 +9,21 @@ Attempting to put the selenium tests into a suite to run them in parallel fails 
 ## Survivor file gaps notes:
  It appears that the gap years in the survivor files are intended to just split the difference,
  however it looks like it's not consistent between rounding and flooring, e.g.:
-
+ 
+```
 ages 62/58 = .890 (via their calculator)
 .885/.896 = 890.5 (via table), which rounds to .891 - so FLOOR is "correct" in this case
 vs.
 ages 62/64 = .923 (via their calculator)
 .917, .928 = 922.5 (via table) which rounds to 923, so ROUND is "correct" in this case. :-(
+```
 
-and therefore we'll have to
+Therefore we'll have to
  fill in the gaps by actually running hundreds of selenium tests to actually observe the factors...
  but that will be tricky because generally it won't use age above retirement age, it'll use normal retirement age.
  Alternatively, we can just unit test the ones that work, and not sweat the other ones. We could also try to request the full
- table from WRS. Or we could create two tables one for gaps and one for downloaded data.
+ table from WRS. Or we could create two tables one for gaps and one for downloaded data. For now I've filled in the gaps to 
+ a new generated table file using round() and can correct the floored ones that pop up as failures manually.
 
 ## Visualization:
 what to graph:
