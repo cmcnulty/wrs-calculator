@@ -6,12 +6,12 @@ describe ('#calculate()', function() {
     glob.sync( './test-data/**/*.json' ).forEach( function( file ) {
         var tests = require(file);
         for(const i in tests) {
-            describe('#dunno()', testRow.bind(null,tests[i]));
+            describe('#calculate()', testRow.bind(null, file, tests[i]));
         }
     });
 });
 
-function testRow (testData) {
+function testRow (testFile, testData) {
     let ex = transformTest(testData.data);
     let calc = Calculator(ex);
     if( calc.getMinimumRetirementAge(ex.salary) > ex.withdrawalAge ) {
@@ -33,13 +33,19 @@ function testRow (testData) {
         let expectedGuaranteed60 = Number(testData.results.SixtyPaymentsReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedGuaranteed180 = Number(testData.results.OneEightyPaymentsGuaranteedReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedSurvivor75 = Number(testData.results.Survivor75Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedSurvivor100 = Number(testData.results.Survivor100Reg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedSurvivor100Plus = Number(testData.results.Survivor100WithGuaranteeReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedSurvivor25Red = Number(testData.results.Reduce25DeathReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedOptional = Number(testData.results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
 
-        it(`should pass generated test: ${ex.name}`, function(){
+        it(`${testFile}: ${ex.name}`, function(){
             expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test`);
             expect(calc.calculate().regular.guaranteed60.toFixed(2)).to.equal(expectedGuaranteed60, `guaranteed 60 test`);
             expect(calc.calculate().regular.guaranteed180.toFixed(2)).to.equal(expectedGuaranteed180, `guaranteed 180 test`);
-            expect(calc.calculate().regular.survivor75.toFixed(2)).to.equal(expectedSurvivor75, `guaranteed 180 test`);
+            expect(calc.calculate().regular.survivor75.toFixed(2)).to.equal(expectedSurvivor75, `survivor 75% test`);
+            expect(calc.calculate().regular.survivor100.toFixed(2)).to.equal(expectedSurvivor100, `survivor 100% test`);
+            expect(calc.calculate().regular.survivor100with180.toFixed(2)).to.equal(expectedSurvivor100Plus, `survivor 100% plus guartanteed test`);
+            expect(calc.calculate().regular.eitherSurvivor75.toFixed(2)).to.equal(expectedSurvivor25Red, `survivor 25% Reduced test`);
             expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib`);
         });
     }

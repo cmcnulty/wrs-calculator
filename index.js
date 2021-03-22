@@ -7,11 +7,21 @@ const formulaMultipler = require('./tables/formula-multiplier.json' );
 const nonProtectiveGuaranteedFactors = require('./tables/non-protective-guaranteed-factors.json');
 const protectiveGuaranteedFactors = require('./tables/protective-guaranteed-factors.json');
 const survivor75 = require('./tables/75-percent-survivor.json');
+const survivor100 = require('./tables/100-percent-survivor.json');
+const survivor25 = require('./tables/survivor-25-percent-reduction.json');
+const survivor100plus = require('./tables/survivor-100-percent-plus-180.json');
 
 const optionsSchema = require('./options-schema.json');
 
 const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
 const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
+
+const TableLookup = {
+    survivor75,
+    survivor100,
+    survivor25,
+    survivor100plus
+};
 
 class RetirementBalance {
     constructor( options ) {
@@ -111,7 +121,10 @@ class RetirementBalance {
         const guaranteedFactor60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
         const guaranteedFactor180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
 
-        const survivor75Factor = this.getSurvivor75Factor(isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor75Factor = this.getOptionConversionFactor( 'survivor75', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor100Factor = this.getOptionConversionFactor( 'survivor100', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor25Factor = this.getOptionConversionFactor( 'survivor25', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor100PlusFactor = this.getOptionConversionFactor( 'survivor100plus', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
 
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
@@ -140,11 +153,14 @@ class RetirementBalance {
         allResults.regular.guaranteed60 = guaranteedFactor60 * monthlyPension;
         allResults.regular.guaranteed180 = guaranteedFactor180 * monthlyPension;
         allResults.regular.survivor75 = survivor75Factor * monthlyPension;
+        allResults.regular.survivor100 = survivor100Factor * monthlyPension;
+        allResults.regular.eitherSurvivor75 = survivor25Factor * monthlyPension;
+        allResults.regular.survivor100with180 = survivor100PlusFactor * monthlyPension;
         return allResults
     }
-    
+
     mergeResults ( data ) {
-        const result = {};       
+        const result = {};
         data.forEach(resultSet => {
           for (let [key, value] of Object.entries(resultSet)) {
                 if (result[key]) {
@@ -156,7 +172,7 @@ class RetirementBalance {
         });
         return result;
     };
-      
+
 
     calculateAge(birthday, ageOn) { // birthday is a date
         if (ageOn === undefined) {
@@ -167,7 +183,7 @@ class RetirementBalance {
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
-    
+
     getNormalRetirementAge(serviceCategory, startDate, combinedServiceYears) {
             /*
         Age 53:  Protective occupation employees with at least 25
@@ -176,8 +192,8 @@ class RetirementBalance {
         Age 54:  Protective occupation employees with less
         than 25 years of creditable service, including creditable
         military service.
-        Age 62:  Elected officials, state executive retirement plan 
-        employees, and judges who first began in one of these 
+        Age 62:  Elected officials, state executive retirement plan
+        employees, and judges who first began in one of these
         categories before January 1, 2017.
         Age 65:  General employees, teachers and educational support
         staff. Additionally, elected officials, state executive
@@ -207,21 +223,21 @@ class RetirementBalance {
                     normalRetirementAge = 62;
                 }
                 break;
-            default: 
+            default:
                 throw `invalid service category: ${serviceCategory}`;
-        } 
+        }
         return normalRetirementAge;
     }
 
-    /* The SECURE Act of 2019 changed the age at which RMDs must begin. 
-    *  If you were born July 1, 1949 or later your first RMD will be in the year you turn age 72. 
-    *  If you were born before July 1, 1949 the age remains 70 1/2. 
+    /* The SECURE Act of 2019 changed the age at which RMDs must begin.
+    *  If you were born July 1, 1949 or later your first RMD will be in the year you turn age 72.
+    *  If you were born before July 1, 1949 the age remains 70 1/2.
     * */
     getRequiredDistributionAge (birthday, terminationAge) {
         let inactiveRetirementAge = 70.5
         if (birthday >= new Date('1949-07-01')) {
             inactiveRetirementAge = 72
-        } 
+        }
         return Math.max(inactiveRetirementAge, terminationAge);
     }
 
@@ -240,8 +256,8 @@ class RetirementBalance {
         The annuities of protective category
         employees are reduced .4% per month for
         each month of age below normal
-        retirement age. 
-        
+        retirement age.
+
         The annuities of
         non-protective employees are reduced
         .4% per month between ages 55 and 57.
@@ -252,7 +268,7 @@ class RetirementBalance {
         service. These are permanent reductions
         to annuities and continue to apply
         after your normal retirement age.
-        
+
         Actual reduction per year for 25 years of service above age 57 = .008
         Actual reduction per year for 22 years = .01275 = .0010625/month
 
@@ -291,36 +307,37 @@ class RetirementBalance {
         let effAge;
         if(isProtective){
             factorTable = protectiveGuaranteedFactors;
-            effAge = Math.min(age, normalRetirementAge);         
+            effAge = Math.min(age, normalRetirementAge);
         } else {
             factorTable = nonProtectiveGuaranteedFactors;
-            effAge = Math.min(age, 62);               
+            effAge = Math.min(age, 62);
         }
 
         return (factorTable[effAge] && factorTable[effAge][months]) || 0;
     }
 
-    getSurvivor75Factor(isProtective, age, normalRetirementAge, survivorAge) {
+    getOptionConversionFactor(option, isProtective, age, normalRetirementAge, survivorAge) {
+        const table = TableLookup[option];
         const effAge = isProtective ? Math.min(age, normalRetirementAge) :  Math.min(age, 62);
         let factor = 0;
-        if (survivor75[survivorAge]) {
-            const ageArray = survivor75[survivorAge];
+        if (table[survivorAge]) {
+            const ageArray = table[survivorAge];
             factor = ageArray && ageArray[effAge]
-        } else if (survivor75[survivorAge + 1] && survivor75[survivorAge - 1] && 
-            survivor75[survivorAge + 1][effAge] && survivor75[survivorAge + 1][effAge]) {
-            factor = Math.round(survivor75[survivorAge + 1][effAge] + survivor75[survivorAge + 1][effAge] / 2, 3);
-        } 
-        return factor || 0;
+        } else {
+            factor = 0;
+            // throw `ConversionFactorNotFoudn: Age ${survivorAge} not found in table ${option}`;
+        }
+        return factor;
     }
 
-    static roundNum(num, length) { 
+    static roundNum(num, length) {
         var number = Math.round(num * Math.pow(10, length)) / Math.pow(10, length);
         return number;
     }
 
     static floorNum(num, length) {
         var number = Math.floor(num * Math.pow(10, length)) / Math.pow(10, length);
-        return number;       
+        return number;
     }
 
     // wrapper so that it was easier to test altnertive modules
