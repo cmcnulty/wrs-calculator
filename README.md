@@ -81,6 +81,10 @@ First let's rule out some more complicated scenarios:
 1. What category does this job fall into?
     [general, etc.]
 
+1. Do you have a target annual salary you'd like to hit with your WRS benefits?
+ OR
+1. Do you just want to see how much you'd make with various retirement & contribution scenarios?
+
 1. So far you've worked for x years under WRS - how many MORE years do you think you'll work under WRS?
     [y] (pre-set with number of years until you collect benefits) (optional, can provide graph of possibilities)
 
