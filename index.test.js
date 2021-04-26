@@ -38,6 +38,7 @@ function testRow (testFile, testData) {
         let expectedSurvivor25Red = Number(testData.results.Reduce25DeathReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedOptional = Number(testData.results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedAcceleratedAfter62 = Number(testData.results.AnnuitantsLifeOnlyAccAfter62.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedAcceleratedUntil62 = Number(testData.results.AnnuitantsLifeOnlyAccUntil62.replace(/[^0-9.-]+/g,"")).toFixed(2);
 
         it(`${testFile}: ${ex.name}`, function(){
             expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test`);
@@ -47,8 +48,28 @@ function testRow (testFile, testData) {
             expect(calc.calculate().regular.survivor100.toFixed(2)).to.equal(expectedSurvivor100, `survivor 100% test`);
             expect(calc.calculate().regular.survivor100with180.toFixed(2)).to.equal(expectedSurvivor100Plus, `survivor 100% plus guartanteed test`);
             expect(calc.calculate().regular.eitherSurvivor75.toFixed(2)).to.equal(expectedSurvivor25Red, `survivor 25% Reduced test`);
-            expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib`);
+
+            expect(calc.calculate().acceleratedUntil62.annuitantsLife.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            /*
+            expect(calc.calculate().acceleratedUntil62.guaranteed60.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            expect(calc.calculate().acceleratedUntil62.guaranteed180.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            expect(calc.calculate().acceleratedUntil62.survivor75.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            expect(calc.calculate().acceleratedUntil62.survivor100.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            expect(calc.calculate().acceleratedUntil62.survivor100with180.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            expect(calc.calculate().acceleratedUntil62.eitherSurvivor75.toFixed(2)).to.equal(expectedAcceleratedUntil62, `Accelerated until age 62 regular`);
+            */
+
             expect(calc.calculate().acceleratedAfter62.annuitantsLife.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            /*
+            expect(calc.calculate().acceleratedAfter62.guaranteed60.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            expect(calc.calculate().acceleratedAfter62.guaranteed180.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            expect(calc.calculate().acceleratedAfter62.survivor75.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            expect(calc.calculate().acceleratedAfter62.survivor100.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            expect(calc.calculate().acceleratedAfter62.survivor100with180.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            expect(calc.calculate().acceleratedAfter62.eitherSurvivor75.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
+            */
+
+            expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib`);
         });
     }
 }

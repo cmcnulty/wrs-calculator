@@ -44,7 +44,7 @@ class RetirementBalance {
 
         this.withdrawalAge = options.withdrawalAge;
         this.terminationAge = options.terminationAge;
-        this.age62ProjectedMonthlySSI = options.age62ProjectedMonthlySSI || 0;
+        this.age62ProjectedMonthlySSI = parseFloat(options.age62ProjectedMonthlySSI);
 
         const withdrawalDate = new Date(this.birthday);
         withdrawalDate.setFullYear(withdrawalDate.getFullYear() + this.withdrawalAge);
@@ -123,16 +123,15 @@ class RetirementBalance {
         const isProtective = PROTECTIVE_CATEGORIES.includes(salary.serviceCategory);
         const normalRetirementAge = this.getNormalRetirementAge(salary.serviceCategory, '2020-01-01', totalYears);
 
-        const guaranteedFactor60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
-        const guaranteedFactor180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
+        const guaranteed60 = this.getGuaranteedFactor(isProtective, this.withdrawalAge, normalRetirementAge, 60);
+        const guaranteed180 = this.getGuaranteedFactor(isProtective,this.withdrawalAge, normalRetirementAge, 180);
 
-        const survivor75Factor = this.getOptionConversionFactor( 'survivor75', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
-        const survivor100Factor = this.getOptionConversionFactor( 'survivor100', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
-        const survivor25Factor = this.getOptionConversionFactor( 'survivor25', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
-        const survivor100PlusFactor = this.getOptionConversionFactor( 'survivor100plus', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor75 = this.getOptionConversionFactor( 'survivor75', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor100 = this.getOptionConversionFactor( 'survivor100', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const eitherSurvivor75 = this.getOptionConversionFactor( 'survivor25', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
+        const survivor100with180 = this.getOptionConversionFactor( 'survivor100plus', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
 
         const acceleratedFactor = this.getAcceleratedFactor(this.withdrawalAge);
-        const acceleratedPayment = acceleratedFactor * this.age62ProjectedMonthlySSI;
 
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
@@ -143,43 +142,41 @@ class RetirementBalance {
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
 
-        const pre62AcceleratedPayment = acceleratedFactor === 0 ? 0 : monthlyPension - acceleratedPayment;
-        console.log(`========================= ${monthlyPension} - ${acceleratedPayment}, ${acceleratedFactor} ===============`);
+        let after62AcceleratedPayment = 0;
+        let pre62AcceleratedPayment = 0;
+        if (acceleratedFactor !== undefined && this.age62ProjectedMonthlySSI > 0 && monthlyPension > 0) {
+            const acceleratedPayment = acceleratedFactor * this.age62ProjectedMonthlySSI;
+            after62AcceleratedPayment = monthlyPension - acceleratedPayment;
+            pre62AcceleratedPayment = after62AcceleratedPayment + this.age62ProjectedMonthlySSI;
+        }
 
         const monthlyPensionDecimal = parseFloat(RetirementBalance.roundNum(monthlyPension,2))
         const monthlypre62AcceleratedDecimal = parseFloat(RetirementBalance.roundNum(pre62AcceleratedPayment,2))
+        const monthlyafter62AcceleratedDecimal = parseFloat(RetirementBalance.roundNum(after62AcceleratedPayment,2))
 
-
-        const resultSet = {
-            annuitantsLife: 0,
-            guaranteed60: 0,
-            guaranteed180: 0,
-            survivor75:0,
-            survivor100: 0,
-            eitherSurvivor75: 0,
-            survivor100with180: 0
+        const factors = {
+            guaranteed60,
+            guaranteed180,
+            survivor75,
+            survivor100,
+            eitherSurvivor75,
+            survivor100with180,
         };
+
+        const regular = Object.fromEntries(Object.entries(factors).map(([k, v]) => [k, v * monthlyPension]));
+        regular.annuitantsLife = monthlyPensionDecimal;
+
+        const acceleratedUntil62 = Object.fromEntries(Object.entries(factors).map(([k, v]) => [k, v * monthlypre62AcceleratedDecimal]));
+        acceleratedUntil62.annuitantsLife = monthlypre62AcceleratedDecimal;
+
+        const acceleratedAfter62 = Object.fromEntries(Object.entries(factors).map(([k, v]) => [k, v * monthlyafter62AcceleratedDecimal]));
+        acceleratedAfter62.annuitantsLife = monthlyafter62AcceleratedDecimal;
+
         const allResults = {
-            regular: {...resultSet},
-            acceleratedUntil62: {...resultSet},
-            acceleratedAfter62: {...resultSet},
+            regular,
+            acceleratedUntil62,
+            acceleratedAfter62,
         };
-        allResults.regular.annuitantsLife = monthlyPensionDecimal;
-        allResults.regular.guaranteed60 = guaranteedFactor60 * monthlyPension;
-        allResults.regular.guaranteed180 = guaranteedFactor180 * monthlyPension;
-        allResults.regular.survivor75 = survivor75Factor * monthlyPension;
-        allResults.regular.survivor100 = survivor100Factor * monthlyPension;
-        allResults.regular.eitherSurvivor75 = survivor25Factor * monthlyPension;
-        allResults.regular.survivor100with180 = survivor100PlusFactor * monthlyPension;
-
-        allResults.acceleratedAfter62.annuitantsLife = monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.guaranteed60 = guaranteedFactor60 * monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.guaranteed180 = guaranteedFactor180 * monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.survivor75 = survivor75Factor * monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.survivor100 = survivor100Factor * monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.eitherSurvivor75 = survivor25Factor * monthlypre62AcceleratedDecimal;
-        allResults.acceleratedAfter62.survivor100with180 = survivor100PlusFactor * monthlypre62AcceleratedDecimal;
-
         return allResults
     }
 
@@ -355,7 +352,7 @@ class RetirementBalance {
     }
 
     getAcceleratedFactor(retirementAge){
-        return acceleratedFactors[retirementAge] || 0;
+        return acceleratedFactors[retirementAge];
     }
 
     static roundNum(num, length) {
