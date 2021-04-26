@@ -10,11 +10,15 @@ const survivor75 = require('./tables/75-percent-survivor.json');
 const survivor100 = require('./tables/100-percent-survivor.json');
 const survivor25 = require('./tables/survivor-25-percent-reduction.json');
 const survivor100plus = require('./tables/survivor-100-percent-plus-180.json');
+const acceleratedFactors = require('./tables/accelerated-payment-factors.json');
 
 const optionsSchema = require('./options-schema.json');
 
 const PROTECTIVE_CATEGORIES = ['protective_with_ss', 'protective_wo_ss'];
 const MAX_GENERAL_BENEFIT_AMOUNT = 0.7;
+
+// In 2021, the minimum amount is $218 and the maximum amount is $449.
+const MIN_ANNUITY = 218;
 
 const TableLookup = {
     survivor75,
@@ -40,6 +44,7 @@ class RetirementBalance {
 
         this.withdrawalAge = options.withdrawalAge;
         this.terminationAge = options.terminationAge;
+        this.age62ProjectedMonthlySSI = options.age62ProjectedMonthlySSI || 0;
 
         const withdrawalDate = new Date(this.birthday);
         withdrawalDate.setFullYear(withdrawalDate.getFullYear() + this.withdrawalAge);
@@ -126,6 +131,9 @@ class RetirementBalance {
         const survivor25Factor = this.getOptionConversionFactor( 'survivor25', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
         const survivor100PlusFactor = this.getOptionConversionFactor( 'survivor100plus', isProtective, this.withdrawalAge, normalRetirementAge, this.survivorAgeAtRetirement);
 
+        const acceleratedFactor = this.getAcceleratedFactor(this.withdrawalAge);
+        const acceleratedPayment = acceleratedFactor * this.age62ProjectedMonthlySSI;
+
         const ageReductionFactor = RetirementBalance.calculateAgeReductionFactor(salary.serviceCategory, this.withdrawalAge, normalRetirementAge, totalYears);
         const multipler = formulaMultipler[salary.serviceCategory][salary.eraCategory];
 
@@ -134,6 +142,13 @@ class RetirementBalance {
 
         const maxBenefit = (monthlyHighestSalary * MAX_GENERAL_BENEFIT_AMOUNT);
         const monthlyPension = Math.min(monthlyHighestSalary * multipler * salary.workingYears * ageReductionFactor, maxBenefit);
+
+        const pre62AcceleratedPayment = acceleratedFactor === 0 ? 0 : monthlyPension - acceleratedPayment;
+        console.log(`========================= ${monthlyPension} - ${acceleratedPayment}, ${acceleratedFactor} ===============`);
+
+        const monthlyPensionDecimal = parseFloat(RetirementBalance.roundNum(monthlyPension,2))
+        const monthlypre62AcceleratedDecimal = parseFloat(RetirementBalance.roundNum(pre62AcceleratedPayment,2))
+
 
         const resultSet = {
             annuitantsLife: 0,
@@ -149,13 +164,22 @@ class RetirementBalance {
             acceleratedUntil62: {...resultSet},
             acceleratedAfter62: {...resultSet},
         };
-        allResults.regular.annuitantsLife = parseFloat(RetirementBalance.roundNum(monthlyPension,2));
+        allResults.regular.annuitantsLife = monthlyPensionDecimal;
         allResults.regular.guaranteed60 = guaranteedFactor60 * monthlyPension;
         allResults.regular.guaranteed180 = guaranteedFactor180 * monthlyPension;
         allResults.regular.survivor75 = survivor75Factor * monthlyPension;
         allResults.regular.survivor100 = survivor100Factor * monthlyPension;
         allResults.regular.eitherSurvivor75 = survivor25Factor * monthlyPension;
         allResults.regular.survivor100with180 = survivor100PlusFactor * monthlyPension;
+
+        allResults.acceleratedAfter62.annuitantsLife = monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.guaranteed60 = guaranteedFactor60 * monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.guaranteed180 = guaranteedFactor180 * monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.survivor75 = survivor75Factor * monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.survivor100 = survivor100Factor * monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.eitherSurvivor75 = survivor25Factor * monthlypre62AcceleratedDecimal;
+        allResults.acceleratedAfter62.survivor100with180 = survivor100PlusFactor * monthlypre62AcceleratedDecimal;
+
         return allResults
     }
 
@@ -330,6 +354,10 @@ class RetirementBalance {
         return factor;
     }
 
+    getAcceleratedFactor(retirementAge){
+        return acceleratedFactors[retirementAge] || 0;
+    }
+
     static roundNum(num, length) {
         var number = Math.round(num * Math.pow(10, length)) / Math.pow(10, length);
         return number;
@@ -351,7 +379,7 @@ class RetirementBalance {
         }
 
         // doesn't handle zero percent interest rate - in that case, just multiply
-        if ( interestRate === 0) {
+        if (interestRate === 0) {
             result.result = currentBalance + (annualContribution * compoundedYears);
         }
 

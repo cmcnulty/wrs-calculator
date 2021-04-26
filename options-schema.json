@@ -30,7 +30,11 @@
     "averageHighestAnnualSalary": {
       "type": "number",
       "minimum": 0
-    },    
+    },
+    "age62ProjectedMonthlySSI": {
+      "type": "number",
+      "minimum": 0
+    },
     "salary": {
       "type": "array",
       "minItems": 1,

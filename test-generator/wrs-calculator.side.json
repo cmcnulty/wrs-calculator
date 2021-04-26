@@ -38,8 +38,20 @@
       ],
       "value": "${survivorBirthDate}"
     }, {
+      "id": "91db4ac7-4cef-4d2f-8e6f-1ece6cd242fe",
+      "comment": "socialSecurityAt62",
+      "command": "type",
+      "target": "name=txtProjectedSS",
+      "targets": [
+        ["name=txtProjectedSS", "name"],
+        ["css=input:nth-child(26)", "css:finder"],
+        ["xpath=//input[@name='txtProjectedSS']", "xpath:attributes"],
+        ["xpath=//input[7]", "xpath:position"]
+      ],
+      "value": "${socialSecurityAt62}"
+    }, {
       "id": "05257b69-ac15-4b19-8854-b8c799a6a552",
-      "comment": "",
+      "comment": "ifSpouse",
       "command": "if",
       "target": "${isSpouse} = 1",
       "targets": [],

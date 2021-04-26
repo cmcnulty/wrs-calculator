@@ -37,6 +37,7 @@ function testRow (testFile, testData) {
         let expectedSurvivor100Plus = Number(testData.results.Survivor100WithGuaranteeReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedSurvivor25Red = Number(testData.results.Reduce25DeathReg.replace(/[^0-9.-]+/g,"")).toFixed(2);
         let expectedOptional = Number(testData.results.AnnuitantsLifeOnlyAddCont.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        let expectedAcceleratedAfter62 = Number(testData.results.AnnuitantsLifeOnlyAccAfter62.replace(/[^0-9.-]+/g,"")).toFixed(2);
 
         it(`${testFile}: ${ex.name}`, function(){
             expect(calc.calculate().regular.annuitantsLife.toFixed(2)).to.equal(expectedMonthly, `pension test`);
@@ -47,6 +48,7 @@ function testRow (testFile, testData) {
             expect(calc.calculate().regular.survivor100with180.toFixed(2)).to.equal(expectedSurvivor100Plus, `survivor 100% plus guartanteed test`);
             expect(calc.calculate().regular.eitherSurvivor75.toFixed(2)).to.equal(expectedSurvivor25Red, `survivor 25% Reduced test`);
             expect(calc.calculate().optionalPension).to.equal(expectedOptional, `voluntary contrib`);
+            expect(calc.calculate().acceleratedAfter62.annuitantsLife.toFixed(2)).to.equal(expectedAcceleratedAfter62, `Accelerated after age 62 regular`);
         });
     }
 }
@@ -62,6 +64,7 @@ function transformTest(test) {
         withdrawalAge: age,
         terminationAge: age,
         averageHighestAnnualSalary: avgSalary,
+        age62ProjectedMonthlySSI: roundNum(test.socialSecurityAt62,2),
     };
 
     if( test.survivorBirthDate !== "") {
